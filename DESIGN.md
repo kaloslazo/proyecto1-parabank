@@ -12,11 +12,15 @@ Una mesa de trabajo de pruebas para un sistema bancario real. La interfaz debe p
 - Confirmación: gris medio `#515154`.
 - Superficies: blanco y gris muy claro.
 - Profundidad mínima; el contenido se separa con reglas, tipografía y espacio.
+- Encabezados: Avenir Next, con peso moderado y tracking natural.
+- Texto e interfaz: SF Pro Text o el sistema nativo como respaldo.
 
 ## Composición
 
 - Una navegación lateral con el contexto del curso y equipo.
 - Encabezados directos, sin slogans ni micro-eyebrow como decoración.
+- Etiquetas en estilo oración, nunca en mayúsculas espaciadas.
+- Ritmo amplio entre grupos; densidad contenida dentro de las tablas.
 - Las tablas y listas son la estructura principal.
 - Tarjetas solo cuando agrupan una acción o una unidad de evidencia.
 - Radios contenidos entre 10 y 16px; sombras suaves y discretas.

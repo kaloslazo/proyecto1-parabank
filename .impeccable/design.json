@@ -3,21 +3,24 @@
   "mode": "operate",
   "tokens": {
     "color": {
-      "canvas": "#f4f2ee",
-      "paper": "#fbfaf8",
-      "ink": "#18202a",
-      "petrol": "#123e4a",
-      "coral": "#c96955",
-      "mint": "#357864",
-      "line": "#dfddd8"
+      "canvas": "#f5f5f7",
+      "paper": "#ffffff",
+      "ink": "#1d1d1f",
+      "petrol": "#1d1d1f",
+      "coral": "#636366",
+      "mint": "#515154",
+      "line": "#e5e5e7"
     },
     "radius": { "control": "10px", "surface": "14px", "clay": "16px" },
-    "shadow": "7px 11px 24px rgba(36, 44, 45, .08)",
-    "type": { "display": "-apple-system, BlinkMacSystemFont, SF Pro Display, Helvetica Neue, sans-serif" }
+    "shadow": "0 8px 24px rgba(0, 0, 0, .055)",
+    "type": {
+      "display": "Avenir Next, SF Pro Display, -apple-system, sans-serif",
+      "body": "SF Pro Text, -apple-system, Helvetica Neue, sans-serif"
+    }
   },
   "rules": [
     "Use direct section titles and evidence-first copy.",
-    "Keep claymorphism to one meaningful surface.",
-    "Prefer tables, lists, and state rows over decorative card grids."
+    "Use sentence case without artificial tracking.",
+    "Prefer spacing, type, tables, lists, and state rows over decorative card grids."
   ]
 }

@@ -54,7 +54,7 @@ export type ClientFunctionality = {
 }
 
 export const clientFunctionalities: ClientFunctionality[] = [
-  { id: 'F-01', name: 'Registro y login de clientes', location: 'Página de inicio y formulario de registro', url: 'index.htm · register.htm', actor: 'Cliente', requirementIds: ['RF-01', 'RF-02', 'RF-03', 'RF-04'] },
+  { id: 'F-01', name: 'Registro y login de clientes', location: 'Página de inicio y formulario de registro', url: 'index.htm / register.htm', actor: 'Cliente', requirementIds: ['RF-01', 'RF-02', 'RF-03', 'RF-04'] },
   { id: 'F-02', name: 'Apertura de nuevas cuentas', location: 'Open New Account, dentro del resumen autenticado', url: 'openaccount.htm', actor: 'Cliente', requirementIds: ['RF-05', 'RF-06', 'RF-07'] },
   { id: 'F-03', name: 'Transferencia entre cuentas propias', location: 'Transfer Funds, dentro del resumen autenticado', url: 'transfer.htm', actor: 'Cliente', requirementIds: ['RF-08', 'RF-09', 'RF-10'] },
   { id: 'F-04', name: 'Pago de servicios a terceros (Bill Pay)', location: 'Bill Pay, dentro del resumen autenticado', url: 'billpay.htm', actor: 'Cliente', requirementIds: ['RF-11', 'RF-12', 'RF-13'] },

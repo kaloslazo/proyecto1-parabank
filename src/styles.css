@@ -212,3 +212,160 @@ body { background: var(--warm); }
 @media (max-width: 760px) {
   .sidebar { background: rgba(250, 250, 250, .96); }
 }
+
+/* Editorial Apple pass: calmer typography, more air, no artificial labels. */
+:root {
+  --font-display: "Avenir Next", "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  font-family: var(--font-body);
+}
+
+::selection { color: #fff; background: #1d1d1f; }
+button, input, select, textarea { font-family: var(--font-body); }
+h1, h2, h3, .brand-mark strong { font-family: var(--font-display); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid #1d1d1f; outline-offset: 3px; }
+
+.sidebar { width: 248px; flex-basis: 248px; padding: 32px 20px 24px; }
+.brand-mark { gap: 12px; padding: 0 8px 44px; }
+.brand-mark > span { width: 38px; height: 38px; border-radius: 11px; font-size: 12px; }
+.brand-mark strong { font-size: 15px; font-weight: 650; letter-spacing: -.02em; }
+.brand-mark small { margin-top: 3px; font-size: 11px; }
+.sidebar-section-label, .micro-label, .eyebrow { color: #86868b; font-size: 12px; font-weight: 600; letter-spacing: -.01em; text-transform: none; }
+.sidebar-section-label { padding: 0 12px 10px; }
+.later-label { margin-top: 34px; }
+.main-nav { gap: 6px; }
+.nav-item { min-height: 44px; gap: 13px; padding: 12px 13px; border-radius: 11px; }
+.nav-item span:not(.nav-dot) { font-size: 14px; }
+.nav-item:hover { transform: none; }
+.secondary-nav .nav-item { color: #86868b; }
+.sidebar-bottom { padding-top: 40px; }
+.nav-dot, .online-dot, .save-dot, .live-marker, .status-dot, .foot-separator { display: none; }
+
+.main-content { width: min(100%, 1440px); padding: 0 64px 104px; }
+.topbar { height: 88px; }
+.breadcrumbs { gap: 11px; font-size: 12px; }
+.save-state { color: #86868b; font-size: 12px; }
+.page-intro { align-items: flex-end; padding: 52px 0 40px; }
+.page-intro h1 { max-width: 760px; margin: 0 0 12px; font-size: clamp(42px, 5vw, 64px); font-weight: 650; line-height: 1.02; letter-spacing: -.035em; }
+.page-intro p { max-width: 68ch; color: #6e6e73; font-size: 16px; line-height: 1.6; }
+.intro-action { padding-bottom: 4px; }
+.button { min-height: 44px; padding: 12px 17px; border-radius: 12px; font-size: 13px; font-weight: 650; }
+.button:hover { box-shadow: none; transform: translateY(-1px); }
+.badge { min-height: 28px; padding: 7px 10px; border-radius: 8px; font-size: 12px; font-weight: 650; }
+.text-button, .light-button { font-size: 13px; font-weight: 650; }
+
+.case-sheet { border-top-width: 1px; }
+.sheet-intro { grid-template-columns: minmax(0, 1fr) minmax(300px, .48fr); gap: 64px; padding: 40px 0 36px; }
+.sheet-code { display: none; }
+.sheet-intro h2 { margin: 0 0 14px; font-size: 34px; font-weight: 600; line-height: 1.15; letter-spacing: -.03em; }
+.sheet-intro p { max-width: 62ch; font-size: 15px; line-height: 1.65; }
+.sheet-meta { gap: 0; }
+.sheet-meta div { grid-template-columns: 72px 1fr; gap: 16px; padding: 12px 0; }
+.sheet-meta dt { font-size: 12px; font-weight: 500; }
+.sheet-meta dd { font-size: 13px; font-weight: 600; }
+.sheet-stats div { padding: 22px 24px; }
+.sheet-stats span { font-size: 12px; }
+.sheet-stats strong { margin-top: 9px; font-size: 28px; font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.sheet-workspace { grid-template-columns: minmax(0, 1.35fr) minmax(290px, .65fr); gap: 52px; padding-top: 48px; }
+.sheet-section-head { gap: 24px; }
+.sheet-section-head h3 { margin: 8px 0 0; font-size: 21px; font-weight: 600; letter-spacing: -.025em; }
+.risk-column-head { margin-top: 32px; padding: 12px 0; font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.risk-table-row { min-height: 82px; gap: 16px; }
+.risk-id { font-size: 12px; font-weight: 650; }
+.risk-table-row strong { font-size: 14px; font-weight: 600; }
+.risk-table-row small { margin-top: 7px; font-size: 12px; line-height: 1.45; }
+.rf-count { width: 30px; height: 30px; border-radius: 8px; font-size: 12px; font-variant-numeric: tabular-nums; }
+.status-column { gap: 20px; }
+.status-block { padding: 28px; border-radius: 18px; }
+.status-block h3 { margin: 10px 0 22px; font-size: 21px; font-weight: 600; line-height: 1.25; letter-spacing: -.025em; }
+.status-dark h3 { font-size: 25px; }
+.status-dark .micro-label { color: rgba(255, 255, 255, .66); }
+.status-dark p { margin: -8px 0 24px; color: rgba(255, 255, 255, .72); font-size: 13px; line-height: 1.6; }
+.compact-actions button, .compact-actions a { display: grid; grid-template-columns: 28px 1fr 16px; gap: 10px; align-items: center; min-height: 48px; padding: 12px 0; border: 0; border-top: 1px solid #e5e5e7; color: var(--ink); background: transparent; text-align: left; font-size: 13px; font-weight: 600; }
+.compact-actions button:hover, .compact-actions a:hover { color: #6e6e73; }
+.compact-actions span { color: #86868b; font-size: 12px; font-variant-numeric: tabular-nums; }
+
+.functionality-note { gap: 16px; margin: 8px 0 28px; padding: 22px 24px; border-radius: 16px; }
+.functionality-note strong { font-size: 14px; font-weight: 600; }
+.functionality-note p { margin-top: 6px; font-size: 13px; line-height: 1.55; }
+.functionality-table { border-top-width: 1px; }
+.functionality-head, .functionality-row { grid-template-columns: 64px minmax(220px, 1.15fr) minmax(260px, 1.35fr) 110px 48px; gap: 20px; padding: 18px 22px; }
+.functionality-head { font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.functionality-row { min-height: 88px; }
+.functionality-row strong { font-size: 14px; font-weight: 600; line-height: 1.35; }
+.functionality-row small { margin-top: 7px; font-size: 12px; }
+.functionality-row > span:not(.functionality-id):not(.rf-count) { font-size: 13px; line-height: 1.5; }
+.functionality-id { font-size: 12px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.functionality-foot { gap: 18px; padding: 22px 4px; font-size: 12px; }
+.functionality-foot strong { font-size: 13px; }
+
+.rf-layout { grid-template-columns: 280px minmax(0, 1fr); gap: 32px; }
+.rf-nav { gap: 7px; top: 28px; }
+.rf-nav > .micro-label { padding: 0 14px 12px; }
+.rf-nav-item { grid-template-columns: 42px 1fr; gap: 4px 9px; min-height: 68px; padding: 14px; border-radius: 12px; }
+.rf-nav-item > span { color: #86868b; font-size: 11px; font-weight: 650; }
+.rf-nav-item strong { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.rf-nav-item small { font-size: 11px; }
+.rf-panel { border-top-width: 1px; }
+.rf-panel-head { padding: 30px 32px; }
+.rf-panel-head h2 { margin: 10px 0 10px; font-size: 28px; font-weight: 600; letter-spacing: -.03em; }
+.rf-panel-head p { font-size: 13px; line-height: 1.55; }
+.rf-panel-head code { font-family: var(--font-body); font-size: 13px; }
+.rf-table { min-width: 1140px; }
+.rf-head, .rf-row { grid-template-columns: 58px minmax(250px, 1.25fr) 90px minmax(225px, 1.1fr) minmax(225px, 1.1fr) 78px; gap: 18px; padding: 17px 24px; }
+.rf-head { font-size: 11px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.rf-row { font-size: 13px; line-height: 1.55; }
+.rf-id { color: #515154; font-size: 12px; font-weight: 650; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 1050px) {
+  .main-content { padding: 0 36px 80px; }
+  .sidebar { width: 220px; flex-basis: 220px; }
+  .sheet-workspace { gap: 32px; }
+}
+
+@media (max-width: 760px) {
+  .sidebar { padding: 13px 16px; }
+  .brand-mark { padding: 0; }
+  .later-label { display: none; }
+  .main-nav, .secondary-nav { margin-left: auto; gap: 1px; }
+  .secondary-nav { margin-left: 0; }
+  .nav-item { min-height: 40px; width: 40px; height: 40px; padding: 0; }
+  .main-content { padding: 0 18px 64px; }
+  .topbar { height: 64px; }
+  .page-intro { padding: 38px 0 30px; }
+  .page-intro h1 { font-size: 42px; line-height: 1.05; }
+  .page-intro p { font-size: 15px; }
+  .intro-action { margin-top: 24px; }
+  .sheet-intro { grid-template-columns: 1fr; gap: 28px; padding: 32px 0; }
+  .sheet-intro h2 { font-size: 30px; }
+  .sheet-intro p { font-size: 15px; }
+  .sheet-stats div { padding: 20px; }
+  .sheet-stats span { font-size: 11px; }
+  .sheet-stats strong { font-size: 26px; }
+  .sheet-workspace { gap: 32px; padding-top: 36px; }
+  .risk-table-row { min-height: 88px; }
+  .status-block { padding: 24px; }
+  .functionality-note { margin-bottom: 24px; padding: 20px; }
+  .functionality-table { overflow: visible; border: 0; background: transparent; }
+  .functionality-table > * { min-width: 0; }
+  .functionality-head { display: none; }
+  .functionality-row { display: grid; grid-template-columns: 1fr; gap: 17px; min-height: 0; margin-bottom: 12px; padding: 22px; border: 1px solid var(--line); border-radius: 16px; background: #fff; }
+  .functionality-row > * { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; align-items: start; width: auto; height: auto; }
+  .functionality-row > *::before { color: #86868b; font-size: 11px; font-weight: 500; content: attr(data-label); }
+  .functionality-row > div strong, .functionality-row > div small { grid-column: 2; }
+  .functionality-row > div::before { grid-row: 1 / span 2; }
+  .functionality-row .rf-count { place-items: start; border-radius: 0; background: transparent; }
+  .functionality-foot { padding: 18px 2px 0; }
+  .rf-layout { grid-template-columns: 1fr; gap: 24px; }
+  .rf-nav { gap: 8px; }
+  .rf-nav-item { min-width: 190px; }
+  .rf-panel-head { padding: 24px; }
+  .rf-panel-head h2 { font-size: 25px; }
+  .rf-table-wrap { overflow: visible; }
+  .rf-table { min-width: 0; }
+  .rf-head { display: none; }
+  .rf-row { display: grid; grid-template-columns: 1fr; gap: 18px; margin: 0 0 12px; padding: 24px; border: 1px solid var(--line); border-radius: 16px; background: #fff; font-size: 14px; }
+  .rf-row > * { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 12px; align-items: start; margin: 0; }
+  .rf-row > *::before { color: #86868b; font-size: 11px; font-weight: 500; content: attr(data-label); }
+  .rf-row .badge { justify-self: start; }
+}
