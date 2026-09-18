@@ -129,3 +129,30 @@ a { color: inherit; text-decoration: none; }
   .metric-card:nth-child(2) { border-right: 0; }
   .metric-card:nth-child(-n+2) { border-bottom: 1px solid #e4e1dc; }
 }
+
+/* Overview is a work sheet: rules and rows carry the hierarchy, not card decoration. */
+.case-sheet { border-top: 2px solid var(--ink); background: transparent; }
+.sheet-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .55fr); gap: 40px; padding: 25px 0 24px; }
+.sheet-code { color: var(--coral); font-size: 11px; font-weight: 800; letter-spacing: .08em; }
+.sheet-intro h2 { margin: 9px 0 9px; font-size: 28px; letter-spacing: -.05em; }
+.sheet-intro p { max-width: 570px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.sheet-meta { display: grid; gap: 11px; margin: 0; align-content: start; }
+.sheet-meta div { display: grid; grid-template-columns: 66px 1fr; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid #dedbd6; }
+.sheet-meta dt { color: #8c928e; font-size: 10px; font-weight: 700; }.sheet-meta dd { margin: 0; color: #30383d; font-size: 11px; font-weight: 700; }
+.live-marker { display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: var(--mint); }
+.sheet-stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid #dedbd6; border-bottom: 1px solid #dedbd6; }
+.sheet-stats div { padding: 15px 17px; border-right: 1px solid #dedbd6; }.sheet-stats div:last-child { border-right: 0; }.sheet-stats span, .sheet-stats strong { display: block; }.sheet-stats span { color: #8c928e; font-size: 10px; }.sheet-stats strong { margin-top: 7px; font-size: 23px; letter-spacing: -.05em; }
+.sheet-workspace { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(270px, .7fr); gap: 34px; padding: 28px 0 0; }
+.sheet-section-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; }.sheet-section-head h3 { margin: 7px 0 0; font-size: 17px; letter-spacing: -.035em; }
+.risk-column-head, .risk-table-row { display: grid; grid-template-columns: 52px minmax(0, 1fr) 62px; gap: 12px; align-items: center; }.risk-column-head { margin-top: 24px; padding: 9px 0; border-bottom: 1px solid var(--ink); color: #8c928e; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }.risk-table-row { min-height: 68px; border-bottom: 1px solid #dedbd6; }.risk-id { color: var(--coral); font-size: 10px; font-weight: 800; }.risk-table-row strong, .risk-table-row small { display: block; }.risk-table-row strong { font-size: 12px; }.risk-table-row small { margin-top: 5px; color: var(--muted); font-size: 11px; }
+.status-column { display: grid; align-content: start; gap: 14px; }.status-block { padding: 18px; border: 1px solid #dedbd6; border-radius: 12px; background: var(--paper); }.status-block h3 { margin: 8px 0 18px; font-size: 16px; line-height: 1.15; letter-spacing: -.04em; }.status-dark { color: #fff; background: var(--plum); border-color: var(--plum); }.status-dark .micro-label { color: #b9d0d4; }.status-dark h3 { font-size: 20px; }.light-button { display: inline-flex; align-items: center; gap: 8px; padding: 8px 0; border: 0; color: #fff; background: transparent; font-size: 11px; font-weight: 800; }.light-button:hover { color: #f2b09d; }.compact-actions { display: grid; }.compact-actions button { display: grid; grid-template-columns: 26px 1fr 14px; gap: 8px; align-items: center; padding: 11px 0; border: 0; border-top: 1px solid #e6e3df; color: var(--ink); background: transparent; text-align: left; font-size: 11px; font-weight: 700; }.compact-actions button:hover { color: var(--plum); }.compact-actions span { color: var(--coral); font-size: 10px; }
+
+@media (max-width: 760px) {
+  .sheet-intro { grid-template-columns: 1fr; gap: 22px; padding-top: 22px; }
+  .sheet-intro h2 { font-size: 26px; }
+  .sheet-meta div { grid-template-columns: 58px 1fr; }
+  .sheet-stats { grid-template-columns: repeat(2, 1fr); }
+  .sheet-stats div:nth-child(2) { border-right: 0; }.sheet-stats div:nth-child(-n+2) { border-bottom: 1px solid #dedbd6; }
+  .sheet-workspace { grid-template-columns: 1fr; gap: 22px; padding-top: 24px; }
+  .risk-column-head, .risk-table-row { grid-template-columns: 44px minmax(0, 1fr) 54px; gap: 8px; }
+}
