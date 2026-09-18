@@ -1,0 +1,23 @@
+{
+  "name": "ParaBank QA Lab",
+  "mode": "operate",
+  "tokens": {
+    "color": {
+      "canvas": "#f4f2ee",
+      "paper": "#fbfaf8",
+      "ink": "#18202a",
+      "petrol": "#123e4a",
+      "coral": "#c96955",
+      "mint": "#357864",
+      "line": "#dfddd8"
+    },
+    "radius": { "control": "10px", "surface": "14px", "clay": "16px" },
+    "shadow": "7px 11px 24px rgba(36, 44, 45, .08)",
+    "type": { "display": "-apple-system, BlinkMacSystemFont, SF Pro Display, Helvetica Neue, sans-serif" }
+  },
+  "rules": [
+    "Use direct section titles and evidence-first copy.",
+    "Keep claymorphism to one meaningful surface.",
+    "Prefer tables, lists, and state rows over decorative card grids."
+  ]
+}

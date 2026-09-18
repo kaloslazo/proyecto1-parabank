@@ -25,7 +25,7 @@ npm run build
 
 ## Dirección visual
 
-La interfaz usa una dirección Apple minimalista con superficies claymorphism contenidas: fondo marfil, superficies suaves, bordes muy ligeros, sombras difusas y una paleta de tinta, ciruela, coral, azul y menta. La profundidad separa niveles de trabajo; no se usa para decorar información vacía.
+La interfaz usa una dirección Apple minimalista con una sola superficie claymorphism protagonista. El resto se comporta como una mesa de trabajo de QA: fondo marfil, tinta petróleo, coral como señal de riesgo, tablas densas y estados explícitos. La profundidad separa niveles de trabajo; no se usa para decorar información vacía.
 
 ## Fuente de verdad del contenido
 
