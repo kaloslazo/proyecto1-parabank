@@ -6,12 +6,12 @@ Una mesa de trabajo de pruebas para un sistema bancario real. La interfaz debe p
 
 ## Material y color
 
-- Fondo: marfil cálido `#f4f2ee`.
-- Tinta principal: petróleo profundo `#123e4a`.
-- Señal de riesgo: coral sobrio `#c96955`.
-- Confirmación: verde menta `#357864`.
-- Superficies: papel casi blanco y gris cálido.
-- Claymorphism solo en el bloque hero que explica la integridad financiera.
+- Fondo: gris Apple `#f5f5f7`.
+- Tinta principal: negro suave `#1d1d1f`.
+- Señal de riesgo: gris medio `#636366`.
+- Confirmación: gris medio `#515154`.
+- Superficies: blanco y gris muy claro.
+- Profundidad mínima; el contenido se separa con reglas, tipografía y espacio.
 
 ## Composición
 

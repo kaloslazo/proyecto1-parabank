@@ -2,7 +2,10 @@
 
 Dashboard de trabajo para el Proyecto 1 de **Pruebas y Verificación de Software (CS5383)**.
 
-El producto convierte el caso de banca digital en un espacio operativo para:
+El producto convierte el caso de banca digital en un espacio operativo para el primer avance y las siguientes etapas:
+
+- documentar las 8 funcionalidades del alcance de ParaBank;
+- presentar 22 requisitos verificables en formato RF, organizados por funcionalidad;
 
 - planificar la estrategia de pruebas;
 - mantener la matriz de trazabilidad;
@@ -23,9 +26,15 @@ Para validar el build de producción:
 npm run build
 ```
 
+## Primer avance · 18/09/2026
+
+La entrega inmediata usa un solo formato: **Requisito (RF)**. La vista `Funcionalidades` cubre todo el alcance del caso y la vista `Requisitos RF` contiene, para cada funcionalidad, ID, requisito verificable, actor, datos y reglas, resultado esperado y prioridad. No se mezclan RF con HU.
+
+Las vistas de casos, ejecución y hallazgos quedan preparadas para las etapas posteriores; cualquier resultado se mantiene como `Pendiente` hasta ejecutarlo en ParaBank.
+
 ## Dirección visual
 
-La interfaz usa una dirección Apple minimalista con una sola superficie claymorphism protagonista. El resto se comporta como una mesa de trabajo de QA: fondo marfil, tinta petróleo, coral como señal de riesgo, tablas densas y estados explícitos. La profundidad separa niveles de trabajo; no se usa para decorar información vacía.
+La interfaz usa una dirección Apple minimalista y monocromática. El resto se comporta como una mesa de trabajo de QA: fondo gris claro, tinta negra, reglas finas, tablas densas y estados explícitos. La profundidad separa niveles de trabajo; no se usa para decorar información vacía.
 
 ## Fuente de verdad del contenido
 

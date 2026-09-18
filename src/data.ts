@@ -34,6 +34,61 @@ export type Finding = {
   status: 'Por ejecutar' | 'Registrado'
 }
 
+export type ClientRequirement = {
+  id: string
+  functionalityId: string
+  requirement: string
+  actor: string
+  dataRules: string
+  expected: string
+  priority: Priority
+}
+
+export type ClientFunctionality = {
+  id: string
+  name: string
+  location: string
+  url: string
+  actor: string
+  requirementIds: string[]
+}
+
+export const clientFunctionalities: ClientFunctionality[] = [
+  { id: 'F-01', name: 'Registro y login de clientes', location: 'Página de inicio y formulario de registro', url: 'index.htm · register.htm', actor: 'Cliente', requirementIds: ['RF-01', 'RF-02', 'RF-03', 'RF-04'] },
+  { id: 'F-02', name: 'Apertura de nuevas cuentas', location: 'Open New Account, dentro del resumen autenticado', url: 'openaccount.htm', actor: 'Cliente', requirementIds: ['RF-05', 'RF-06', 'RF-07'] },
+  { id: 'F-03', name: 'Transferencia entre cuentas propias', location: 'Transfer Funds, dentro del resumen autenticado', url: 'transfer.htm', actor: 'Cliente', requirementIds: ['RF-08', 'RF-09', 'RF-10'] },
+  { id: 'F-04', name: 'Pago de servicios a terceros (Bill Pay)', location: 'Bill Pay, dentro del resumen autenticado', url: 'billpay.htm', actor: 'Cliente', requirementIds: ['RF-11', 'RF-12', 'RF-13'] },
+  { id: 'F-05', name: 'Búsqueda de transacciones', location: 'Find Transactions / Account History', url: 'findtrans.htm', actor: 'Cliente', requirementIds: ['RF-14', 'RF-15'] },
+  { id: 'F-06', name: 'Actualización de datos de contacto', location: 'Update Contact Info, dentro del perfil', url: 'updateprofile.htm', actor: 'Cliente', requirementIds: ['RF-16', 'RF-17'] },
+  { id: 'F-07', name: 'Solicitud de préstamos', location: 'Request Loan, dentro del resumen autenticado', url: 'requestloan.htm', actor: 'Cliente', requirementIds: ['RF-18', 'RF-19'] },
+  { id: 'F-08', name: 'Panel de administración', location: 'Administration: base de datos y parámetros del banco', url: 'admin.htm', actor: 'Administrador', requirementIds: ['RF-20', 'RF-21', 'RF-22'] },
+]
+
+export const clientRequirements: ClientRequirement[] = [
+  { id: 'RF-01', functionalityId: 'F-01', requirement: 'El sistema debe permitir registrar un cliente cuando se completen todos los campos obligatorios y el nombre de usuario no esté registrado.', actor: 'Cliente', dataRules: 'Nombre, apellido, dirección, ciudad, estado, código postal, teléfono, SSN, usuario, contraseña y confirmación; todos obligatorios y usuario único.', expected: 'La cuenta se crea y se muestra una confirmación de registro.', priority: 'Media' },
+  { id: 'RF-02', functionalityId: 'F-01', requirement: 'El sistema debe rechazar el registro cuando el nombre de usuario ya exista.', actor: 'Cliente', dataRules: 'Usuario previamente registrado; el resto de datos puede ser válido.', expected: 'El registro no se crea y se muestra un mensaje indicando que el usuario ya está en uso.', priority: 'Alta' },
+  { id: 'RF-03', functionalityId: 'F-01', requirement: 'El sistema debe rechazar el acceso cuando el usuario o la contraseña sean inválidos.', actor: 'Cliente', dataRules: 'Usuario inexistente, contraseña incorrecta o ambos datos inválidos.', expected: 'La sesión no se inicia y se muestra un mensaje de error claro.', priority: 'Alta' },
+  { id: 'RF-04', functionalityId: 'F-01', requirement: 'El sistema debe permitir el acceso cuando las credenciales correspondan a un cliente registrado.', actor: 'Cliente', dataRules: 'Usuario y contraseña válidos de una cuenta existente.', expected: 'El cliente ingresa al resumen de cuentas y puede ver las operaciones disponibles.', priority: 'Media' },
+  { id: 'RF-05', functionalityId: 'F-02', requirement: 'El sistema debe permitir abrir una cuenta corriente o de ahorro cuando se seleccione el tipo y una cuenta de fondeo válida.', actor: 'Cliente', dataRules: 'Tipo: Checking o Savings; cuenta de fondeo existente y perteneciente al cliente.', expected: 'La nueva cuenta se crea y aparece en el resumen del cliente.', priority: 'Alta' },
+  { id: 'RF-06', functionalityId: 'F-02', requirement: 'El sistema debe rechazar la apertura cuando no se seleccione el tipo de cuenta o la cuenta de fondeo.', actor: 'Cliente', dataRules: 'Tipo vacío, cuenta de fondeo vacía o ambos datos ausentes.', expected: 'La cuenta no se crea y el formulario solicita completar los datos faltantes.', priority: 'Alta' },
+  { id: 'RF-07', functionalityId: 'F-02', requirement: 'El sistema debe mostrar la cuenta recién creada con su número y saldo en el resumen del cliente.', actor: 'Cliente', dataRules: 'Apertura completada correctamente.', expected: 'El número de cuenta, tipo y saldo inicial quedan visibles al volver al resumen.', priority: 'Media' },
+  { id: 'RF-08', functionalityId: 'F-03', requirement: 'El sistema debe transferir fondos entre dos cuentas propias cuando el monto sea positivo y exista saldo suficiente.', actor: 'Cliente', dataRules: 'Origen y destino distintos; monto mayor que cero y menor o igual al saldo de origen.', expected: 'El origen se debita y el destino se acredita por el mismo monto.', priority: 'Alta' },
+  { id: 'RF-09', functionalityId: 'F-03', requirement: 'El sistema debe rechazar una transferencia cuyo monto supere el saldo disponible.', actor: 'Cliente', dataRules: 'Monto igual al saldo más 0.01 o cualquier monto mayor al saldo de origen.', expected: 'La transferencia no se procesa y ningún saldo cambia.', priority: 'Alta' },
+  { id: 'RF-10', functionalityId: 'F-03', requirement: 'El sistema debe rechazar montos cero, negativos o una transferencia hacia la misma cuenta de origen.', actor: 'Cliente', dataRules: 'Monto 0.00, monto negativo, origen igual a destino.', expected: 'La operación no se procesa y el sistema muestra una validación comprensible.', priority: 'Media' },
+  { id: 'RF-11', functionalityId: 'F-04', requirement: 'El sistema debe procesar un pago de servicio cuando beneficiario, dirección, cuenta y monto sean válidos.', actor: 'Cliente', dataRules: 'Datos del beneficiario completos; cuenta propia seleccionada; monto positivo y dentro del saldo disponible.', expected: 'El pago se confirma y el monto se descuenta de la cuenta seleccionada.', priority: 'Alta' },
+  { id: 'RF-12', functionalityId: 'F-04', requirement: 'El sistema debe rechazar un pago de servicio cuando falte el nombre, dirección, cuenta o monto requerido.', actor: 'Cliente', dataRules: 'Omitir cada campo obligatorio al menos una vez; probar monto vacío y no numérico.', expected: 'El pago no se procesa y se identifica el dato faltante o inválido.', priority: 'Alta' },
+  { id: 'RF-13', functionalityId: 'F-04', requirement: 'El sistema debe rechazar un pago de servicio cuyo monto supere el saldo de la cuenta seleccionada.', actor: 'Cliente', dataRules: 'Monto igual al saldo más 0.01 o superior.', expected: 'El pago no se procesa y el saldo de la cuenta permanece sin cambios.', priority: 'Alta' },
+  { id: 'RF-14', functionalityId: 'F-05', requirement: 'El sistema debe mostrar las transacciones que correspondan a una fecha exacta o a un rango de fechas válido.', actor: 'Cliente', dataRules: 'Fecha exacta y rango con fecha inicial menor o igual a fecha final.', expected: 'La lista muestra únicamente las transacciones que cumplen el filtro.', priority: 'Media' },
+  { id: 'RF-15', functionalityId: 'F-05', requirement: 'El sistema debe permitir localizar una transacción por monto o por ID de transacción.', actor: 'Cliente', dataRules: 'Monto exacto de una operación existente e ID de una operación existente; probar valores sin coincidencia.', expected: 'Se muestra la operación coincidente o un mensaje de que no existen resultados.', priority: 'Media' },
+  { id: 'RF-16', functionalityId: 'F-06', requirement: 'El sistema debe guardar los nuevos datos de contacto cuando el cliente complete la actualización y la confirme.', actor: 'Cliente', dataRules: 'Teléfono, dirección, ciudad, estado y código postal con valores válidos.', expected: 'El sistema confirma la actualización y los datos quedan asociados al perfil.', priority: 'Media' },
+  { id: 'RF-17', functionalityId: 'F-06', requirement: 'El sistema no debe guardar datos de contacto incompletos o inválidos.', actor: 'Cliente', dataRules: 'Campo obligatorio vacío, código postal inválido o formato de teléfono inválido.', expected: 'La actualización se rechaza y se informa qué dato debe corregirse.', priority: 'Baja' },
+  { id: 'RF-18', functionalityId: 'F-07', requirement: 'El sistema debe aprobar una solicitud de préstamo cuando el monto solicitado y el enganche cumplan la regla configurada.', actor: 'Cliente', dataRules: 'Monto de préstamo válido y down payment igual o superior al umbral configurado.', expected: 'La solicitud muestra un resultado de aprobación.', priority: 'Media' },
+  { id: 'RF-19', functionalityId: 'F-07', requirement: 'El sistema debe rechazar una solicitud de préstamo cuando el enganche no cumpla la regla configurada.', actor: 'Cliente', dataRules: 'Down payment inferior al umbral o datos de solicitud inválidos.', expected: 'La solicitud muestra un resultado de rechazo y no se presenta como aprobada.', priority: 'Media' },
+  { id: 'RF-20', functionalityId: 'F-08', requirement: 'El panel debe permitir inicializar o limpiar la base de datos mediante las acciones administrativas disponibles.', actor: 'Administrador', dataRules: 'Acción Initialize o Clean seleccionada en la pantalla Administration.', expected: 'La acción se ejecuta y el panel informa su resultado.', priority: 'Media' },
+  { id: 'RF-21', functionalityId: 'F-08', requirement: 'El panel debe permitir configurar los valores numéricos de saldo inicial, saldo mínimo y umbral del banco.', actor: 'Administrador', dataRules: 'Valores numéricos válidos; probar también campos vacíos, negativos o no numéricos.', expected: 'Los parámetros se pueden enviar y el sistema muestra una confirmación o validación.', priority: 'Media' },
+  { id: 'RF-22', functionalityId: 'F-08', requirement: 'El panel debe permitir seleccionar el proveedor y procesador de préstamos disponibles.', actor: 'Administrador', dataRules: 'Opciones válidas de Loan Provider y Loan Processor.', expected: 'La selección queda disponible para la configuración del banco.', priority: 'Baja' },
+]
+
 export const requirements: Requirement[] = [
   { id: 'RF-01', title: 'Registro con campos obligatorios y usuario único', type: 'Funcional', risk: 'Media', rationale: 'Evita cuentas incompletas y duplicadas durante la captación.', coveredBy: ['CP-REG-01', 'CP-REG-02', 'CP-REG-03'] },
   { id: 'RF-02', title: 'Login con rechazo claro de credenciales inválidas', type: 'Funcional', risk: 'Alta', rationale: 'Protege el acceso y evita estados ambiguos de autenticación.', coveredBy: ['CP-LOG-01', 'CP-LOG-02'] },
@@ -76,9 +131,9 @@ export const initialFindings: Finding[] = [
 ]
 
 export const navItems: { key: NavKey; label: string; icon: string }[] = [
-  { key: 'overview', label: 'Resumen', icon: 'grid' },
-  { key: 'plan', label: 'Plan', icon: 'clipboard' },
-  { key: 'traceability', label: 'Trazabilidad', icon: 'route' },
+  { key: 'overview', label: 'Avance', icon: 'grid' },
+  { key: 'plan', label: 'Funcionalidades', icon: 'clipboard' },
+  { key: 'traceability', label: 'Requisitos RF', icon: 'route' },
   { key: 'cases', label: 'Casos', icon: 'check' },
   { key: 'execution', label: 'Ejecución', icon: 'play' },
   { key: 'findings', label: 'Hallazgos', icon: 'spark' },
