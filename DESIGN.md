@@ -6,12 +6,11 @@ Una mesa de trabajo de pruebas para un sistema bancario real. La interfaz debe p
 
 ## Material y color
 
-- Fondo: gris Apple `#f5f5f7`.
-- Tinta principal: negro suave `#1d1d1f`.
-- Señal de riesgo: gris medio `#636366`.
-- Confirmación: gris medio `#515154`.
-- Superficies: blanco y gris muy claro.
-- Profundidad mínima; el contenido se separa con reglas, tipografía y espacio.
+- Modo claro: lienzo gris Apple `#f5f5f7`, superficies blancas y tinta `#1d1d1f`.
+- Modo oscuro: lienzo `#111113`, superficies `#1c1c1e` y tinta `#f5f5f7`.
+- Señales y estados: grises medios, sin color decorativo.
+- Profundidad plana: sin sombras, gradientes ni desenfoques.
+- Cada bloque de contenido se contiene en una superficie con borde fino.
 - Encabezados: Avenir Next, con peso moderado y tracking natural.
 - Texto e interfaz: SF Pro Text o el sistema nativo como respaldo.
 
@@ -21,11 +20,12 @@ Una mesa de trabajo de pruebas para un sistema bancario real. La interfaz debe p
 - Sin logotipo decorativo; el contexto se comunica con texto directo.
 - Encabezados directos, sin slogans ni micro-eyebrow como decoración.
 - Etiquetas en estilo oración, nunca en mayúsculas espaciadas.
-- Ritmo amplio entre grupos; densidad contenida dentro de las tablas.
+- Ritmo amplio entre grupos y una escala tipográfica estable; densidad contenida dentro de las tablas.
 - Las tablas y listas son la estructura principal.
 - Tarjetas solo cuando agrupan una acción o una unidad de evidencia.
 - Cada tarjeta móvil sigue el orden identificador, título, contexto y resultado.
-- Radios contenidos entre 10 y 16px; sombras suaves y discretas.
+- Radios contenidos entre 10 y 16px; separación únicamente mediante fondo, borde y espacio.
+- Sidebar fija durante el recorrido en escritorio; navegación inferior plana en móvil.
 
 ## Voz
 

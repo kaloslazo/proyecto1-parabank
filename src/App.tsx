@@ -19,6 +19,8 @@ function Icon({ name, size = 18 }: { name: string; size?: number }) {
     shield: <><path d="M12 3 20 6v5c0 5-3.3 8.2-8 10-4.7-1.8-8-5-8-10V6l8-3Z" /><path d="m8.5 12 2.2 2.2 4.8-5" /></>,
     filter: <><path d="M4 6h16M7 12h10M10 18h4" /></>,
     close: <><path d="m6 6 12 12M18 6 6 18" /></>,
+    sun: <><circle cx="12" cy="12" r="3.5" /><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" /></>,
+    moon: <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z" />,
   }
   return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name] ?? paths.spark}</svg>
 }
@@ -33,6 +35,11 @@ function ProgressBar({ value, tone = 'plum' }: { value: number; tone?: string })
 
 function App() {
   const [activeNav, setActiveNav] = useState<NavKey>('overview')
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('parabank-theme')
+    if (saved === 'light' || saved === 'dark') return saved
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  })
   const [cases, setCases] = useState<TestCase[]>(() => loadLocal('parabank-cases', initialCases))
   const [findings, setFindings] = useState<Finding[]>(() => loadLocal('parabank-findings', initialFindings))
   const [selectedCase, setSelectedCase] = useState<TestCase | null>(null)
@@ -44,6 +51,12 @@ function App() {
 
   useEffect(() => { localStorage.setItem('parabank-cases', JSON.stringify(cases)) }, [cases])
   useEffect(() => { localStorage.setItem('parabank-findings', JSON.stringify(findings)) }, [findings])
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#111113' : '#f5f5f7')
+    localStorage.setItem('parabank-theme', theme)
+  }, [theme])
 
   const filteredCases = useMemo(() => {
     if (caseFilter === 'Todos') return cases
@@ -95,7 +108,22 @@ function App() {
       </aside>
 
       <main className="main-content">
-        <header className="topbar"><div className="breadcrumbs"><span>CS5383</span><b>/</b><span>Proyecto 1</span><b>/</b><strong>Caso 1</strong></div><span className="topbar-label">Primer avance</span></header>
+        <header className="topbar">
+          <div className="breadcrumbs"><span>CS5383</span><b>/</b><span>Proyecto 1</span><b>/</b><strong>Caso 1</strong></div>
+          <div className="topbar-actions">
+            <span className="topbar-label">Primer avance</span>
+            <button
+              className="theme-toggle"
+              type="button"
+              aria-label={theme === 'light' ? 'Activar modo oscuro' : 'Activar modo claro'}
+              title={theme === 'light' ? 'Activar modo oscuro' : 'Activar modo claro'}
+              onClick={() => setTheme((current) => current === 'light' ? 'dark' : 'light')}
+            >
+              <Icon name={theme === 'light' ? 'moon' : 'sun'} size={17} />
+              <span>{theme === 'light' ? 'Oscuro' : 'Claro'}</span>
+            </button>
+          </div>
+        </header>
         {notice && <div className="toast" role="status"><Icon name="check" size={16} />{notice}</div>}
         {activeNav === 'overview' && <Overview onNavigate={navigateTo} />}
         {activeNav === 'plan' && <Functionalities />}

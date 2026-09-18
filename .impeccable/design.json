@@ -12,15 +12,21 @@
       "line": "#e5e5e7"
     },
     "radius": { "control": "10px", "surface": "14px", "clay": "16px" },
-    "shadow": "0 8px 24px rgba(0, 0, 0, .055)",
+    "shadow": "none",
     "type": {
       "display": "Avenir Next, SF Pro Display, -apple-system, sans-serif",
       "body": "SF Pro Text, -apple-system, Helvetica Neue, sans-serif"
     }
   },
+  "themes": {
+    "light": { "canvas": "#f5f5f7", "surface": "#ffffff", "surfaceMuted": "#f0f0f2", "ink": "#1d1d1f", "muted": "#6e6e73", "line": "#d9d9de" },
+    "dark": { "canvas": "#111113", "surface": "#1c1c1e", "surfaceMuted": "#252527", "ink": "#f5f5f7", "muted": "#aeaeb2", "line": "#3a3a3e" }
+  },
   "rules": [
     "Use direct section titles and evidence-first copy.",
     "Use sentence case without artificial tracking.",
-    "Prefer spacing, type, tables, lists, and state rows over decorative card grids."
+    "Prefer spacing, type, tables, lists, and state rows over decorative card grids.",
+    "Do not use shadows, gradients, blur, or translucent navigation surfaces.",
+    "Keep each major section inside a flat bordered surface in both themes."
   ]
 }
