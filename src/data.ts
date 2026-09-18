@@ -131,10 +131,10 @@ export const initialFindings: Finding[] = [
 ]
 
 export const navItems: { key: NavKey; label: string; icon: string }[] = [
-  { key: 'overview', label: 'Avance', icon: 'grid' },
-  { key: 'plan', label: 'Funcionalidades', icon: 'clipboard' },
-  { key: 'traceability', label: 'Requisitos RF', icon: 'route' },
+  { key: 'overview', label: 'Resumen', icon: 'grid' },
+  { key: 'plan', label: 'Funciones', icon: 'clipboard' },
+  { key: 'traceability', label: 'Requisitos', icon: 'route' },
   { key: 'cases', label: 'Casos', icon: 'check' },
   { key: 'execution', label: 'Ejecución', icon: 'play' },
-  { key: 'findings', label: 'Hallazgos', icon: 'spark' },
+  { key: 'findings', label: 'Hallazgos', icon: 'clipboard' },
 ]

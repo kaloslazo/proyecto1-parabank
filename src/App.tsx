@@ -51,6 +51,11 @@ function App() {
     return cases.filter((item) => item.feature === caseFilter)
   }, [caseFilter, cases])
 
+  function navigateTo(key: NavKey) {
+    setActiveNav(key)
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+  }
+
   function updateStatus(id: string, status: TestStatus) {
     setCases((current) => current.map((item) => item.id === id ? { ...item, status } : item))
     setNotice(`Resultado guardado para ${id}.`)
@@ -78,26 +83,21 @@ function App() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <div className="brand-mark"><span>PB</span><div><strong>ParaBank</strong><small>CS5383 / Laboratorio 11</small></div></div>
+        <div className="project-label"><strong>Proyecto 1</strong><small>Pruebas de software</small></div>
         <div className="sidebar-section-label">Primer avance</div>
         <nav className="main-nav" aria-label="Navegación principal">
-          {navItems.slice(0, 3).map((item) => <button key={item.key} aria-label={item.label} title={item.label} className={activeNav === item.key ? 'nav-item active' : 'nav-item'} onClick={() => setActiveNav(item.key)}><Icon name={item.icon} /><span>{item.label}</span></button>)}
+          {navItems.slice(0, 3).map((item) => <button key={item.key} aria-label={item.label} title={item.label} className={activeNav === item.key ? 'nav-item active' : 'nav-item'} onClick={() => navigateTo(item.key)}><Icon name={item.icon} /><span>{item.label}</span></button>)}
         </nav>
         <div className="sidebar-section-label later-label">Proyecto completo</div>
         <nav className="main-nav secondary-nav" aria-label="Etapas posteriores">
-          {navItems.slice(3).map((item) => <button key={item.key} aria-label={item.label} title={item.label} className={activeNav === item.key ? 'nav-item active' : 'nav-item'} onClick={() => setActiveNav(item.key)}><Icon name={item.icon} /><span>{item.label}</span></button>)}
+          {navItems.slice(3).map((item) => <button key={item.key} aria-label={item.label} title={item.label} className={activeNav === item.key ? 'nav-item active' : 'nav-item'} onClick={() => navigateTo(item.key)}><Icon name={item.icon} /><span>{item.label}</span></button>)}
         </nav>
-        <div className="sidebar-bottom">
-          <div className="case-mini"><span className="mini-orb">01</span><div><small>Equipo</small><strong>Kalos + Gianpier</strong></div></div>
-          <a className="system-link" href="https://parabank.parasoft.com/parabank/index.htm" target="_blank" rel="noreferrer"><span>Parabank real</span><Icon name="external" size={15} /></a>
-          <div className="profile"><div className="avatar">KL</div><div><strong>Kalos Lazo</strong><small>Integrante 1</small></div></div>
-        </div>
       </aside>
 
       <main className="main-content">
-        <header className="topbar"><div className="breadcrumbs"><span>CS5383</span><b>/</b><span>Proyecto 1</span><b>/</b><strong>Caso 1</strong></div><div className="topbar-actions"><span className="save-state">Material de exposición</span><button className="icon-button" aria-label="Ayuda"><Icon name="spark" size={17} /></button></div></header>
+        <header className="topbar"><div className="breadcrumbs"><span>CS5383</span><b>/</b><span>Proyecto 1</span><b>/</b><strong>Caso 1</strong></div><span className="topbar-label">Primer avance</span></header>
         {notice && <div className="toast" role="status"><Icon name="check" size={16} />{notice}</div>}
-        {activeNav === 'overview' && <Overview onNavigate={setActiveNav} />}
+        {activeNav === 'overview' && <Overview onNavigate={navigateTo} />}
         {activeNav === 'plan' && <Functionalities />}
         {activeNav === 'traceability' && <ClientRequirements />}
         {activeNav === 'cases' && <Cases cases={filteredCases} filter={caseFilter} setFilter={setCaseFilter} selectedCase={selectedCase} setSelectedCase={setSelectedCase} />}
@@ -127,7 +127,7 @@ function Overview({ onNavigate }: { onNavigate: (key: NavKey) => void }) {
     <section className="case-sheet">
       <div className="sheet-intro"><div><h2>Requisitos del cliente</h2><p>El alcance del sistema se organiza en ocho funcionalidades. Cada una tiene requisitos verificables con actor, reglas, resultado observable y prioridad.</p></div><dl className="sheet-meta"><div><dt>Equipo</dt><dd>Kalos Lazo y Gianpier Segovia</dd></div><div><dt>Formato</dt><dd>Requisito funcional (RF)</dd></div><div><dt>Uso</dt><dd>Apoyo para la exposición</dd></div></dl></div>
       <div className="sheet-stats"><div><span>Funcionalidades</span><strong>8/8</strong></div><div><span>Requisitos RF</span><strong>{clientRequirements.length}</strong></div><div><span>Prioridad alta</span><strong>{clientRequirements.filter((item) => item.priority === 'Alta').length}</strong></div><div><span>Exposición</span><strong>20:00</strong></div></div>
-      <div className="sheet-workspace"><div className="risk-table"><div className="sheet-section-head"><div><span className="micro-label">Mapa de funcionalidades</span><h3>Todo el alcance está cubierto</h3></div><button className="text-button" onClick={() => onNavigate('plan')}>Ver tabla completa <Icon name="arrow" size={16} /></button></div><div className="risk-column-head functionality-column-head"><span>ID</span><span>Funcionalidad y ubicación</span><span>RF</span></div>{clientFunctionalities.map((item) => <div className="risk-table-row functionality-summary-row" key={item.id}><span className="risk-id">{item.id}</span><div><strong>{item.name}</strong><small>{item.location} ({item.url})</small></div><span className="rf-count">{item.requirementIds.length}</span></div>)}</div><aside className="status-column"><div className="status-block status-dark"><span className="micro-label">Formato elegido</span><h3>Requisito funcional</h3><p>Una tabla por funcionalidad con actor, datos y reglas, resultado esperado y prioridad.</p><button className="light-button" onClick={() => onNavigate('traceability')}>Ver requisitos <Icon name="arrow" size={15} /></button></div><div className="status-block"><div className="sheet-section-head"><div><span className="micro-label">Orden de exposición</span><h3>Recorrido recomendado</h3></div></div><div className="compact-actions"><button onClick={() => onNavigate('plan')}><span>1</span>Funcionalidades <Icon name="arrow" size={14} /></button><button onClick={() => onNavigate('traceability')}><span>2</span>Requisitos por funcionalidad <Icon name="arrow" size={14} /></button><a href="https://parabank.parasoft.com/parabank/index.htm" target="_blank" rel="noreferrer"><span>3</span>Sistema real <Icon name="external" size={14} /></a></div></div></aside></div>
+      <div className="sheet-workspace"><div className="risk-table"><div className="sheet-section-head"><div><span className="micro-label">Mapa de funcionalidades</span><h3>Todo el alcance está cubierto</h3></div><button className="text-button" onClick={() => onNavigate('plan')}>Ver tabla completa <Icon name="arrow" size={16} /></button></div><div className="risk-column-head functionality-column-head"><span>ID</span><span>Funcionalidad y ubicación</span><span>RF</span></div>{clientFunctionalities.map((item) => <div className="risk-table-row functionality-summary-row" key={item.id}><span className="risk-id">{item.id}</span><div><strong>{item.name}</strong><small>{item.location} ({item.url})</small></div><span className="rf-count">{item.requirementIds.length}</span></div>)}</div><aside className="presentation-guide"><section className="guide-panel"><span className="guide-index">1</span><div><span className="micro-label">Formato de entrega</span><h3>Requisitos funcionales</h3><p>Cada requisito incluye actor, datos y reglas, resultado esperado y prioridad.</p><button className="text-button" onClick={() => onNavigate('traceability')}>Revisar los requisitos <Icon name="arrow" size={15} /></button></div></section><section className="guide-panel"><span className="guide-index">2</span><div><span className="micro-label">Durante la exposición</span><h3>Recorrido recomendado</h3><div className="compact-actions"><button onClick={() => onNavigate('plan')}><span>1</span>Mostrar las funcionalidades <Icon name="arrow" size={14} /></button><button onClick={() => onNavigate('traceability')}><span>2</span>Explicar los requisitos <Icon name="arrow" size={14} /></button><a href="https://parabank.parasoft.com/parabank/index.htm" target="_blank" rel="noreferrer"><span>3</span>Abrir el sistema real <Icon name="external" size={14} /></a></div></div></section></aside></div>
     </section>
   </>
 }
@@ -137,7 +137,7 @@ function Metric({ label, value, detail, tone }: { label: string; value: string; 
 }
 
 function Functionalities() {
-  return <><PageIntro title="Funcionalidades identificadas" description="El mapa completo del alcance funcional de ParaBank, en el orden recomendado para exponer." action={<Badge tone="mint">{clientFunctionalities.length} de 8</Badge>} /><div className="functionality-note"><Icon name="clipboard" size={20} /><div><strong>Formato elegido: requisito funcional</strong><p>Las ocho funcionalidades usan la misma estructura RF indicada en la guía.</p></div></div><div className="functionality-table"><div className="functionality-head"><span>ID</span><span>Funcionalidad</span><span>Dónde se encuentra en el sistema real</span><span>Actor</span><span>RF</span></div>{clientFunctionalities.map((item) => <div className="functionality-row" key={item.id}><span className="functionality-id" data-label="ID">{item.id}</span><div data-label="Funcionalidad"><strong>{item.name}</strong><small>{item.url}</small></div><span data-label="Ubicación">{item.location}</span><span data-label="Actor">{item.actor}</span><span className="rf-count" data-label="Requisitos">{item.requirementIds.length}</span></div>)}</div><div className="functionality-foot"><span>Alcance completo</span><strong>8 funcionalidades, {clientRequirements.length} requisitos verificables</strong><span>La exposición sigue este orden.</span></div></>
+  return <><PageIntro title="Funcionalidades identificadas" description="El mapa completo del alcance funcional de ParaBank, en el orden recomendado para exponer." action={<Badge tone="mint">{clientFunctionalities.length} de 8</Badge>} /><div className="functionality-note"><Icon name="clipboard" size={20} /><div><strong>Formato elegido: requisito funcional</strong><p>Las ocho funcionalidades usan la misma estructura RF indicada en la guía.</p></div></div><div className="functionality-table"><div className="functionality-head"><span>ID</span><span>Funcionalidad</span><span>Dónde se encuentra en el sistema real</span><span>Actor</span><span>RF</span></div>{clientFunctionalities.map((item) => <div className="functionality-row" key={item.id}><span className="functionality-id" data-label="ID">{item.id}</span><div className="functionality-title" data-label="Funcionalidad"><strong>{item.name}</strong><small>{item.url}</small></div><span className="functionality-location" data-label="Ubicación">{item.location}</span><span className="functionality-actor" data-label="Actor">{item.actor}</span><span className="rf-count" data-label="Requisitos">{item.requirementIds.length}</span></div>)}</div><div className="functionality-foot"><span>Alcance completo</span><strong>8 funcionalidades, {clientRequirements.length} requisitos verificables</strong><span>La exposición sigue este orden.</span></div></>
 }
 
 function ClientRequirements() {

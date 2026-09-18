@@ -17,12 +17,14 @@ Una mesa de trabajo de pruebas para un sistema bancario real. La interfaz debe p
 
 ## Composición
 
-- Una navegación lateral con el contexto del curso y equipo.
+- Navegación lateral sobria en escritorio y navegación inferior táctil en móvil.
+- Sin logotipo decorativo; el contexto se comunica con texto directo.
 - Encabezados directos, sin slogans ni micro-eyebrow como decoración.
 - Etiquetas en estilo oración, nunca en mayúsculas espaciadas.
 - Ritmo amplio entre grupos; densidad contenida dentro de las tablas.
 - Las tablas y listas son la estructura principal.
 - Tarjetas solo cuando agrupan una acción o una unidad de evidencia.
+- Cada tarjeta móvil sigue el orden identificador, título, contexto y resultado.
 - Radios contenidos entre 10 y 16px; sombras suaves y discretas.
 
 ## Voz
