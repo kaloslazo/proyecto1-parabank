@@ -44,6 +44,11 @@ export type ClientRequirement = {
   priority: Priority
 }
 
+export type ClientBlackBoxExample = {
+  technique: string
+  example: string
+}
+
 export type ClientFunctionality = {
   id: string
   name: string
@@ -95,6 +100,31 @@ export const clientRequirements: ClientRequirement[] = [
   { id: 'RF-21', functionalityId: 'F-08', requirement: 'El panel debe permitir configurar los valores numéricos de saldo inicial, saldo mínimo y umbral del banco.', actor: 'Administrador', dataRules: 'Valores numéricos válidos; probar también campos vacíos, negativos o no numéricos.', expected: 'Los parámetros se pueden enviar y el sistema muestra una confirmación o validación.', priority: 'Media' },
   { id: 'RF-22', functionalityId: 'F-08', requirement: 'El panel debe permitir seleccionar el proveedor y procesador de préstamos disponibles.', actor: 'Administrador', dataRules: 'Opciones válidas de Loan Provider y Loan Processor.', expected: 'La selección queda disponible para la configuración del banco.', priority: 'Baja' },
 ]
+
+export const clientBlackBoxExamples: Record<string, ClientBlackBoxExample> = {
+  'RF-01': { technique: 'Partición de equivalencia', example: 'Registrar un cliente con todos los campos válidos y repetir dejando vacío un campo obligatorio; comparar creación y rechazo.' },
+  'RF-02': { technique: 'Partición de equivalencia', example: 'Enviar el formulario con un usuario nuevo y luego con un usuario ya registrado; el segundo intento debe rechazarse.' },
+  'RF-03': { technique: 'Partición de equivalencia', example: 'Probar usuario válido con contraseña incorrecta, usuario inexistente y ambos datos inválidos; ninguna combinación debe iniciar sesión.' },
+  'RF-04': { technique: 'Transición de estados', example: 'Partir de una sesión cerrada, ingresar credenciales válidas y comprobar el cambio al resumen autenticado.' },
+  'RF-05': { technique: 'Tabla de decisión', example: 'Combinar tipo de cuenta seleccionado y cuenta de fondeo válida; solo la combinación completa debe crear la cuenta.' },
+  'RF-06': { technique: 'Tabla de decisión', example: 'Omitir el tipo, omitir la cuenta de fondeo y omitir ambos; en los tres casos la apertura debe bloquearse.' },
+  'RF-07': { technique: 'Transición de estados', example: 'Registrar el resumen antes de abrir la cuenta, completar la apertura y verificar que aparezcan el nuevo número, tipo y saldo.' },
+  'RF-08': { technique: 'Tabla de decisión', example: 'Usar cuentas distintas, monto positivo y saldo suficiente; verificar el mismo importe como débito en origen y crédito en destino.' },
+  'RF-09': { technique: 'Análisis de valores límite', example: 'Con saldo conocido, probar exactamente el saldo disponible y luego saldo + 0.01; el segundo monto debe rechazarse.' },
+  'RF-10': { technique: 'Análisis de valores límite', example: 'Intentar transferir 0.00 y -0.01; ninguno debe modificar los saldos ni generar una transacción.' },
+  'RF-11': { technique: 'Tabla de decisión', example: 'Completar beneficiario, dirección, cuenta y monto válido con saldo suficiente; el pago debe confirmarse y descontarse.' },
+  'RF-12': { technique: 'Partición de equivalencia', example: 'Omitir por separado nombre, dirección, cuenta y monto, y probar un monto no numérico; cada entrada inválida debe rechazarse.' },
+  'RF-13': { technique: 'Análisis de valores límite', example: 'Probar un pago igual al saldo y otro por saldo + 0.01; el segundo no debe procesarse ni alterar el saldo.' },
+  'RF-14': { technique: 'Análisis de valores límite', example: 'Buscar con fecha inicial igual a la final y luego con la fecha final anterior; comparar los resultados y la validación.' },
+  'RF-15': { technique: 'Partición de equivalencia', example: 'Buscar un monto y un ID existentes, y repetir con valores sin coincidencia; debe mostrarse la operación o un estado sin resultados.' },
+  'RF-16': { technique: 'Transición de estados', example: 'Anotar los datos actuales, guardar teléfono y dirección nuevos, volver al perfil y comprobar que los cambios persistan.' },
+  'RF-17': { technique: 'Partición de equivalencia', example: 'Probar un campo obligatorio vacío, teléfono con formato inválido y código postal inválido; ningún cambio debe guardarse.' },
+  'RF-18': { technique: 'Tabla de decisión', example: 'Combinar monto válido con enganche igual o superior al umbral; la solicitud debe mostrar aprobación.' },
+  'RF-19': { technique: 'Análisis de valores límite', example: 'Probar un enganche exactamente en el umbral y otro inmediatamente inferior; el segundo debe producir rechazo.' },
+  'RF-20': { technique: 'Transición de estados', example: 'Con datos existentes, ejecutar Clean y comprobar el estado vacío; luego ejecutar Initialize y verificar la restauración de datos base.' },
+  'RF-21': { technique: 'Partición de equivalencia', example: 'Enviar valores numéricos válidos y repetir con campos vacíos, negativos y texto; observar confirmación o validación.' },
+  'RF-22': { technique: 'Tabla de decisión', example: 'Seleccionar combinaciones disponibles de proveedor y procesador, guardar y comprobar que la configuración elegida permanezca activa.' },
+}
 
 export const clientNonFunctionalRequirements: ClientNonFunctionalRequirement[] = [
   {
