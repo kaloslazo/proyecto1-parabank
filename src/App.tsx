@@ -19,6 +19,7 @@ function Icon({ name, size = 18 }: { name: string; size?: number }) {
     shield: <><path d="M12 3 20 6v5c0 5-3.3 8.2-8 10-4.7-1.8-8-5-8-10V6l8-3Z" /><path d="m8.5 12 2.2 2.2 4.8-5" /></>,
     filter: <><path d="M4 6h16M7 12h10M10 18h4" /></>,
     close: <><path d="m6 6 12 12M18 6 6 18" /></>,
+    sidebar: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16M13 9l2 3-2 3" /></>,
     sun: <><circle cx="12" cy="12" r="3.5" /><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42" /></>,
     moon: <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 8.5 8.5 0 1 0 20.5 14.5Z" />,
   }
@@ -35,6 +36,7 @@ function ProgressBar({ value, tone = 'plum' }: { value: number; tone?: string })
 
 function App() {
   const [activeNav, setActiveNav] = useState<NavKey>('overview')
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => localStorage.getItem('parabank-sidebar') === 'collapsed')
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('parabank-theme')
     if (saved === 'light' || saved === 'dark') return saved
@@ -51,6 +53,7 @@ function App() {
 
   useEffect(() => { localStorage.setItem('parabank-cases', JSON.stringify(cases)) }, [cases])
   useEffect(() => { localStorage.setItem('parabank-findings', JSON.stringify(findings)) }, [findings])
+  useEffect(() => { localStorage.setItem('parabank-sidebar', sidebarCollapsed ? 'collapsed' : 'expanded') }, [sidebarCollapsed])
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     document.documentElement.style.colorScheme = theme
@@ -94,9 +97,14 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="project-label"><strong>Proyecto 1</strong><small>Pruebas de software</small></div>
+    <div className={sidebarCollapsed ? 'app-shell sidebar-collapsed' : 'app-shell'}>
+      <aside className={sidebarCollapsed ? 'sidebar collapsed' : 'sidebar'}>
+        <div className="sidebar-header">
+          <div className="project-label"><strong>Proyecto 1</strong><small>Pruebas de software</small></div>
+          <button className="sidebar-toggle" type="button" aria-pressed={sidebarCollapsed} aria-label={sidebarCollapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'} title={sidebarCollapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'} onClick={() => setSidebarCollapsed((current) => !current)}>
+            <Icon name="sidebar" size={17} /><span>{sidebarCollapsed ? 'Expandir' : 'Colapsar'}</span>
+          </button>
+        </div>
         <div className="sidebar-section-label">Primer avance</div>
         <nav className="main-nav" aria-label="Navegación principal">
           {navItems.slice(0, 3).map((item) => <button key={item.key} aria-label={item.label} title={item.label} className={activeNav === item.key ? 'nav-item active' : 'nav-item'} onClick={() => navigateTo(item.key)}><Icon name={item.icon} /><span>{item.label}</span></button>)}
@@ -172,7 +180,7 @@ function ClientRequirements() {
   const [activeFunctionality, setActiveFunctionality] = useState(clientFunctionalities[0].id)
   const current = clientFunctionalities.find((item) => item.id === activeFunctionality) ?? clientFunctionalities[0]
   const currentRequirements = clientRequirements.filter((item) => item.functionalityId === current.id)
-  return <><PageIntro title="Requisitos del cliente" description="Los RF describen el comportamiento del sistema; cada uno incluye una técnica de caja negra posible y datos de ejemplo." action={<Badge tone="plum">{clientRequirements.length} RF + {clientNonFunctionalRequirements.length} RNF</Badge>} /><div className="rf-layout"><aside className="rf-nav"><span className="micro-label">Funcionalidades</span>{clientFunctionalities.map((item) => <button key={item.id} className={activeFunctionality === item.id ? 'rf-nav-item active' : 'rf-nav-item'} onClick={() => setActiveFunctionality(item.id)}><span>{item.id}</span><strong>{item.name}</strong><small>{item.requirementIds.length} requisitos</small></button>)}</aside><section className="rf-panel" data-functionality={current.id}><div className="rf-panel-head"><div><span className="functionality-id">{current.id}</span><h2>{current.name}</h2><p><strong>Dónde se usa:</strong> {current.location}</p></div><Badge tone="mint">{currentRequirements.length} RF</Badge></div><div className="rf-table-wrap"><div className="rf-table"><div className="rf-head"><span>ID</span><span>Requisito verificable</span><span>Actor</span><span>Datos y reglas</span><span>Resultado esperado</span><span>Prioridad</span></div>{currentRequirements.map((item) => { const blackBox = clientBlackBoxExamples[item.id]; return <div className="rf-row" key={item.id}><span className="rf-id" data-label="ID">{item.id}</span><p data-label="Requisito">{item.requirement}</p><span data-label="Actor">{item.actor}</span><p data-label="Datos y reglas">{item.dataRules}</p><p data-label="Resultado esperado">{item.expected}</p><span data-label="Prioridad"><Badge tone={priorityClass[item.priority]}>{item.priority}</Badge></span><div className="rf-blackbox" data-label="Ejemplo de caja negra"><div><span>Técnica</span><strong>{blackBox.technique}</strong></div><p><span>Ejemplo</span>{blackBox.example}</p></div></div> })}</div></div></section></div><section className="nfr-section"><div className="nfr-section-head"><div><h2>Requisitos no funcionales</h2><p>Condiciones de calidad indicadas en el enunciado del Caso 1.</p></div><Badge tone="neutral">{clientNonFunctionalRequirements.length} RNF</Badge></div><div className="nfr-table"><div className="nfr-head"><span>ID</span><span>Condición</span><span>Requisito</span><span>Cómo se verifica</span><span>Prioridad</span></div>{clientNonFunctionalRequirements.map((item) => <div className="nfr-row" key={item.id}><span className="nfr-id">{item.id}</span><strong className="nfr-category">{item.category}</strong><p className="nfr-requirement">{item.requirement}</p><p className="nfr-verification">{item.verification}</p><span className="nfr-priority"><Badge tone={priorityClass[item.priority]}>{item.priority}</Badge></span></div>)}</div></section></>
+  return <><PageIntro title="Requisitos del cliente" description="Los RF describen el comportamiento del sistema; cada uno incluye una técnica de caja negra posible y datos de ejemplo." action={<Badge tone="plum">{clientRequirements.length} RF + {clientNonFunctionalRequirements.length} RNF</Badge>} /><section className="priority-criterion" aria-label="Criterio de prioridad"><div><span className="micro-label">Criterio de prioridad</span><h2>Primero, acceso y dinero</h2><p>La prioridad se asignó por impacto en operaciones monetarias, acceso a cuentas, integridad de datos y configuración administrativa.</p></div><div className="priority-legend"><div><Badge tone="high">Alta</Badge><span>bloquea o puede afectar dinero, acceso o reglas del banco</span></div><div><Badge tone="medium">Media</Badge><span>apoya la trazabilidad, el perfil o un flujo de soporte</span></div><div><Badge tone="low">Baja</Badge><span>cubre una validación periférica sin movimiento financiero directo</span></div></div></section><div className="rf-layout"><aside className="rf-nav"><span className="micro-label">Funcionalidades</span>{clientFunctionalities.map((item) => <button key={item.id} className={activeFunctionality === item.id ? 'rf-nav-item active' : 'rf-nav-item'} onClick={() => setActiveFunctionality(item.id)}><span>{item.id}</span><strong>{item.name}</strong><small>{item.requirementIds.length} requisitos</small></button>)}</aside><section className="rf-panel" data-functionality={current.id}><div className="rf-panel-head"><div><span className="functionality-id">{current.id}</span><h2>{current.name}</h2><p><strong>Dónde se usa:</strong> {current.location}</p></div><Badge tone="mint">{currentRequirements.length} RF</Badge></div><div className="rf-table-wrap"><div className="rf-table"><div className="rf-head"><span>ID</span><span>Requisito verificable</span><span>Actor</span><span>Datos y reglas</span><span>Resultado esperado</span><span>Prioridad</span></div>{currentRequirements.map((item) => { const blackBox = clientBlackBoxExamples[item.id]; return <div className="rf-row" key={item.id}><span className="rf-id" data-label="ID">{item.id}</span><p data-label="Requisito">{item.requirement}</p><span data-label="Actor">{item.actor}</span><p data-label="Datos y reglas">{item.dataRules}</p><p data-label="Resultado esperado">{item.expected}</p><span data-label="Prioridad"><Badge tone={priorityClass[item.priority]}>{item.priority}</Badge></span><div className="rf-blackbox" data-label="Ejemplo de caja negra"><div><span>Técnica</span><strong>{blackBox.technique}</strong></div><p><span>Ejemplo</span>{blackBox.example}</p></div></div> })}</div></div></section></div><section className="nfr-section"><div className="nfr-section-head"><div><h2>Requisitos no funcionales</h2><p>Condiciones de calidad indicadas en el enunciado del Caso 1.</p></div><Badge tone="neutral">{clientNonFunctionalRequirements.length} RNF</Badge></div><div className="nfr-table"><div className="nfr-head"><span>ID</span><span>Condición</span><span>Requisito</span><span>Cómo se verifica</span><span>Prioridad</span></div>{clientNonFunctionalRequirements.map((item) => <div className="nfr-row" key={item.id}><span className="nfr-id">{item.id}</span><strong className="nfr-category">{item.category}</strong><p className="nfr-requirement">{item.requirement}</p><p className="nfr-verification">{item.verification}</p><span className="nfr-priority"><Badge tone={priorityClass[item.priority]}>{item.priority}</Badge></span></div>)}</div></section></>
 }
 
 function Plan() {
