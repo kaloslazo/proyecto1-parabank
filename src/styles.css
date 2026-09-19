@@ -1244,3 +1244,40 @@ textarea { color: var(--ink); background: var(--surface-muted); border-color: va
   .priority-legend { padding-top: 18px; padding-left: 0; border-top: 1px solid var(--line); border-left: 0; }
   .app-shell.sidebar-collapsed .main-content { width: 100%; }
 }
+
+/* Movimiento breve para que el cambio de sección se sienta continuo. */
+.sidebar,
+.main-content {
+  transition: width .22s ease-out, flex-basis .22s ease-out, padding .22s ease-out;
+}
+
+.view-transition {
+  animation: view-enter .22s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.nav-item,
+.sidebar-toggle,
+.theme-toggle,
+.button,
+.text-button,
+.filter-pill,
+.rf-nav-item,
+.functionality-row,
+.case-row,
+.rf-panel {
+  transition: color .18s ease, background-color .18s ease, border-color .18s ease, opacity .18s ease;
+}
+
+@keyframes view-enter {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}

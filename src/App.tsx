@@ -69,7 +69,7 @@ function App() {
 
   function navigateTo(key: NavKey) {
     setActiveNav(key)
-    window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'auto' }))
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
   }
 
   function updateStatus(id: string, status: TestStatus) {
@@ -101,8 +101,8 @@ function App() {
       <aside className={sidebarCollapsed ? 'sidebar collapsed' : 'sidebar'}>
         <div className="sidebar-header">
           <div className="project-label"><strong>Proyecto 1</strong><small>Pruebas de software</small></div>
-          <button className="sidebar-toggle" type="button" aria-pressed={sidebarCollapsed} aria-label={sidebarCollapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'} title={sidebarCollapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'} onClick={() => setSidebarCollapsed((current) => !current)}>
-            <Icon name="sidebar" size={17} /><span>{sidebarCollapsed ? 'Expandir' : 'Colapsar'}</span>
+          <button className="sidebar-toggle" type="button" aria-expanded={!sidebarCollapsed} aria-label={sidebarCollapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'} title={sidebarCollapsed ? 'Expandir barra lateral' : 'Colapsar barra lateral'} onClick={() => setSidebarCollapsed((current) => !current)}>
+            <Icon name="sidebar" size={17} />
           </button>
         </div>
         <div className="sidebar-section-label">Primer avance</div>
@@ -133,12 +133,14 @@ function App() {
           </div>
         </header>
         {notice && <div className="toast" role="status"><Icon name="check" size={16} />{notice}</div>}
-        {activeNav === 'overview' && <Overview onNavigate={navigateTo} />}
-        {activeNav === 'plan' && <Functionalities />}
-        {activeNav === 'traceability' && <ClientRequirements />}
-        {activeNav === 'cases' && <Cases cases={filteredCases} filter={caseFilter} setFilter={setCaseFilter} selectedCase={selectedCase} setSelectedCase={setSelectedCase} />}
-        {activeNav === 'execution' && <Execution cases={highCases} updateStatus={updateStatus} toggleEvidence={toggleEvidence} />}
-        {activeNav === 'findings' && <Findings findings={findings} showForm={showFindingForm} setShowForm={setShowFindingForm} onSubmit={addFinding} />}
+        <div key={activeNav} className="view-transition">
+          {activeNav === 'overview' && <Overview onNavigate={navigateTo} />}
+          {activeNav === 'plan' && <Functionalities />}
+          {activeNav === 'traceability' && <ClientRequirements />}
+          {activeNav === 'cases' && <Cases cases={filteredCases} filter={caseFilter} setFilter={setCaseFilter} selectedCase={selectedCase} setSelectedCase={setSelectedCase} />}
+          {activeNav === 'execution' && <Execution cases={highCases} updateStatus={updateStatus} toggleEvidence={toggleEvidence} />}
+          {activeNav === 'findings' && <Findings findings={findings} showForm={showFindingForm} setShowForm={setShowFindingForm} onSubmit={addFinding} />}
+        </div>
       </main>
     </div>
   )
