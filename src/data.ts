@@ -48,20 +48,19 @@ export type ClientFunctionality = {
   id: string
   name: string
   location: string
-  url: string
   actor: string
   requirementIds: string[]
 }
 
 export const clientFunctionalities: ClientFunctionality[] = [
-  { id: 'F-01', name: 'Registro y login de clientes', location: 'Página de inicio y formulario de registro', url: 'index.htm / register.htm', actor: 'Cliente', requirementIds: ['RF-01', 'RF-02', 'RF-03', 'RF-04'] },
-  { id: 'F-02', name: 'Apertura de nuevas cuentas', location: 'Open New Account, dentro del resumen autenticado', url: 'openaccount.htm', actor: 'Cliente', requirementIds: ['RF-05', 'RF-06', 'RF-07'] },
-  { id: 'F-03', name: 'Transferencia entre cuentas propias', location: 'Transfer Funds, dentro del resumen autenticado', url: 'transfer.htm', actor: 'Cliente', requirementIds: ['RF-08', 'RF-09', 'RF-10'] },
-  { id: 'F-04', name: 'Pago de servicios a terceros (Bill Pay)', location: 'Bill Pay, dentro del resumen autenticado', url: 'billpay.htm', actor: 'Cliente', requirementIds: ['RF-11', 'RF-12', 'RF-13'] },
-  { id: 'F-05', name: 'Búsqueda de transacciones', location: 'Find Transactions / Account History', url: 'findtrans.htm', actor: 'Cliente', requirementIds: ['RF-14', 'RF-15'] },
-  { id: 'F-06', name: 'Actualización de datos de contacto', location: 'Update Contact Info, dentro del perfil', url: 'updateprofile.htm', actor: 'Cliente', requirementIds: ['RF-16', 'RF-17'] },
-  { id: 'F-07', name: 'Solicitud de préstamos', location: 'Request Loan, dentro del resumen autenticado', url: 'requestloan.htm', actor: 'Cliente', requirementIds: ['RF-18', 'RF-19'] },
-  { id: 'F-08', name: 'Panel de administración', location: 'Administration: base de datos y parámetros del banco', url: 'admin.htm', actor: 'Administrador', requirementIds: ['RF-20', 'RF-21', 'RF-22'] },
+  { id: 'F-01', name: 'Registro y login de clientes', location: 'Inicio y formulario de registro', actor: 'Cliente', requirementIds: ['RF-01', 'RF-02', 'RF-03', 'RF-04'] },
+  { id: 'F-02', name: 'Apertura de nuevas cuentas', location: 'Menú de la cuenta: Abrir nueva cuenta', actor: 'Cliente', requirementIds: ['RF-05', 'RF-06', 'RF-07'] },
+  { id: 'F-03', name: 'Transferencia entre cuentas propias', location: 'Menú de la cuenta: Transferir fondos', actor: 'Cliente', requirementIds: ['RF-08', 'RF-09', 'RF-10'] },
+  { id: 'F-04', name: 'Pago de servicios a terceros (Bill Pay)', location: 'Menú de la cuenta: Pagar servicios', actor: 'Cliente', requirementIds: ['RF-11', 'RF-12', 'RF-13'] },
+  { id: 'F-05', name: 'Búsqueda de transacciones', location: 'Menú de la cuenta: Buscar transacciones e historial', actor: 'Cliente', requirementIds: ['RF-14', 'RF-15'] },
+  { id: 'F-06', name: 'Actualización de datos de contacto', location: 'Menú de la cuenta: Actualizar datos de contacto', actor: 'Cliente', requirementIds: ['RF-16', 'RF-17'] },
+  { id: 'F-07', name: 'Solicitud de préstamos', location: 'Menú de la cuenta: Solicitar préstamo', actor: 'Cliente', requirementIds: ['RF-18', 'RF-19'] },
+  { id: 'F-08', name: 'Panel de administración', location: 'Panel de administración del banco', actor: 'Administrador', requirementIds: ['RF-20', 'RF-21', 'RF-22'] },
 ]
 
 export const clientRequirements: ClientRequirement[] = [

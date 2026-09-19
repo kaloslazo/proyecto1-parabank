@@ -139,7 +139,7 @@ def build_pdf(functionalities: list[dict], requirements: list[dict]) -> None:
 
     meta = Table([
         [p("Curso", "MetaLabel"), p("CS5383 - Verificación y Pruebas de Software", "MetaValue")],
-        [p("Sistema real", "MetaLabel"), p("ParaBank - https://parabank.parasoft.com/parabank/index.htm", "MetaValue")],
+        [p("Sistema real", "MetaLabel"), p("ParaBank, sitio web público de Parasoft", "MetaValue")],
         [p("Integrantes", "MetaLabel"), p("Kalos Lazo y Gianpier Segovia", "MetaValue")],
         [p("Formato elegido", "MetaLabel"), p("Requisito funcional (RF)", "MetaValue")],
         [p("Fecha", "MetaLabel"), p("18 de septiembre de 2026", "MetaValue")],
@@ -179,17 +179,17 @@ def build_pdf(functionalities: list[dict], requirements: list[dict]) -> None:
     ))
     function_rows = [[
         p("ID", "HeaderCell"), p("Funcionalidad", "HeaderCell"),
-        p("Dónde se encuentra en el sistema real", "HeaderCell"), p("Pantalla / URL", "HeaderCell"),
-        p("Actor", "HeaderCell"), p("RF", "HeaderCell"),
+        p("Dónde se encuentra en el sistema real", "HeaderCell"), p("Actor", "HeaderCell"),
+        p("RF", "HeaderCell"),
     ]]
     for item in functionalities:
         function_rows.append([
             p(item["id"], "CellStrong"), p(item["name"], "CellStrong"), p(item["location"]),
-            p(item["url"], "CellMuted"), p(item["actor"]), p(str(len(item["requirementIds"])), "CellStrong"),
+            p(item["actor"]), p(str(len(item["requirementIds"])), "CellStrong"),
         ])
     function_table = LongTable(
         function_rows, repeatRows=1,
-        colWidths=[16 * mm, 52 * mm, 86 * mm, 42 * mm, 34 * mm, 16 * mm],
+        colWidths=[16 * mm, 67 * mm, 107 * mm, 40 * mm, 16 * mm],
     )
     function_table.setStyle(table_style())
     story.append(function_table)
@@ -198,7 +198,7 @@ def build_pdf(functionalities: list[dict], requirements: list[dict]) -> None:
         related = [r for r in requirements if r["functionalityId"] == item["id"]]
         story.append(PageBreak())
         title = f'{item["id"]} - {item["name"]}'
-        location = f'<b>Ubicación en ParaBank:</b> {item["location"]} ({item["url"]})'
+        location = f'<b>Dónde se usa:</b> {item["location"]}'
         story.append(KeepTogether([
             Paragraph(title, styles["SectionTitle"]),
             Paragraph(location, styles["SectionLead"]),
