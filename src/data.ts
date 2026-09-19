@@ -52,6 +52,14 @@ export type ClientFunctionality = {
   requirementIds: string[]
 }
 
+export type ClientNonFunctionalRequirement = {
+  id: string
+  category: string
+  requirement: string
+  verification: string
+  priority: Priority
+}
+
 export const clientFunctionalities: ClientFunctionality[] = [
   { id: 'F-01', name: 'Registro y login de clientes', location: 'Inicio y formulario de registro', actor: 'Cliente', requirementIds: ['RF-01', 'RF-02', 'RF-03', 'RF-04'] },
   { id: 'F-02', name: 'Apertura de nuevas cuentas', location: 'Menú de la cuenta: Abrir nueva cuenta', actor: 'Cliente', requirementIds: ['RF-05', 'RF-06', 'RF-07'] },
@@ -86,6 +94,30 @@ export const clientRequirements: ClientRequirement[] = [
   { id: 'RF-20', functionalityId: 'F-08', requirement: 'El panel debe permitir inicializar o limpiar la base de datos mediante las acciones administrativas disponibles.', actor: 'Administrador', dataRules: 'Acción Initialize o Clean seleccionada en la pantalla Administration.', expected: 'La acción se ejecuta y el panel informa su resultado.', priority: 'Media' },
   { id: 'RF-21', functionalityId: 'F-08', requirement: 'El panel debe permitir configurar los valores numéricos de saldo inicial, saldo mínimo y umbral del banco.', actor: 'Administrador', dataRules: 'Valores numéricos válidos; probar también campos vacíos, negativos o no numéricos.', expected: 'Los parámetros se pueden enviar y el sistema muestra una confirmación o validación.', priority: 'Media' },
   { id: 'RF-22', functionalityId: 'F-08', requirement: 'El panel debe permitir seleccionar el proveedor y procesador de préstamos disponibles.', actor: 'Administrador', dataRules: 'Opciones válidas de Loan Provider y Loan Processor.', expected: 'La selección queda disponible para la configuración del banco.', priority: 'Baja' },
+]
+
+export const clientNonFunctionalRequirements: ClientNonFunctionalRequirement[] = [
+  {
+    id: 'RNF-01',
+    category: 'Disponibilidad',
+    requirement: 'El sistema debe mantener una alta disponibilidad durante el horario bancario.',
+    verification: 'Comprobar el acceso y una operación crítica en distintas franjas del horario bancario; registrar cualquier indisponibilidad.',
+    priority: 'Alta',
+  },
+  {
+    id: 'RNF-02',
+    category: 'Rendimiento',
+    requirement: 'El sistema debe responder en menos de 3 segundos por transacción.',
+    verification: 'Medir el tiempo desde el envío de una transferencia o pago válido hasta que se muestre la confirmación.',
+    priority: 'Media',
+  },
+  {
+    id: 'RNF-03',
+    category: 'Sesión',
+    requirement: 'El sistema debe cerrar automáticamente la sesión después de un periodo de inactividad.',
+    verification: 'Dejar la sesión sin actividad e intentar acceder luego a una función protegida; el sistema debe solicitar autenticación.',
+    priority: 'Media',
+  },
 ]
 
 export const requirements: Requirement[] = [
