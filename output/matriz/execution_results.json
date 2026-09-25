@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "sistema": "ParaBank - https://parabank.parasoft.com/parabank/index.htm",
+    "usuario_prueba": "gsegovia_qa_5821",
+    "cuentas": "28662 (Checking) y 28773 (Savings)",
+    "fecha_ejecucion": "24-09-2026",
+    "resumen": "9 casos de prioridad alta ejecutados: 6 pasaron, 3 fallaron, 0 bloqueados. 3 hallazgos."
+  },
+  "execution": {
+    "CP-02": {
+      "verdict": "Pasó",
+      "obtained": "Sin sesión activa, el registro con un usuario ya existente se rechaza mostrando 'This username already exists.' y no se crea una segunda cuenta.",
+      "evidence": "CP-02_usuario_duplicado_rechazado.jpg",
+      "notes": "Observación menor: si se envía el registro estando ya autenticado con ese mismo usuario, el sistema muestra una página de 'cuenta creada' en lugar del error de duplicado (inconsistencia de UX, sin impacto de datos)."
+    },
+    "CP-03": {
+      "verdict": "Pasó",
+      "obtained": "El sistema muestra 'Error! The username and password could not be verified.' y no inicia sesión.",
+      "evidence": "CP-03_login_invalido.jpg",
+      "notes": ""
+    },
+    "CP-05": {
+      "verdict": "Pasó",
+      "obtained": "Se creó la cuenta SAVINGS N.º 28773 fondeada desde 28662; aparece en el Accounts Overview con su número y saldo.",
+      "evidence": "CP-05_cuenta_savings_creada.jpg",
+      "notes": ""
+    },
+    "CP-06": {
+      "verdict": "Pasó",
+      "obtained": "La UI no permite dejar el tipo ni la cuenta de fondeo vacíos: ambos desplegables tienen un valor por defecto, por lo que no se puede crear una cuenta con datos faltantes.",
+      "evidence": "CP-06_apertura_sin_opcion_vacia.jpg",
+      "notes": "Se cumple por prevención: no existe opción vacía; el estado inválido no es alcanzable por la interfaz."
+    },
+    "CP-08": {
+      "verdict": "Pasó",
+      "obtained": "Transferencia de $100.00 de 28662 a 28773: origen $425.50 -> $325.50 y destino $90.00 -> $190.00. Débito y crédito por el mismo monto, reflejados en el historial.",
+      "evidence": "CP-08_saldos_despues.jpg",
+      "notes": "Saldos verificados antes y después en Accounts Overview."
+    },
+    "CP-09": {
+      "verdict": "Falló",
+      "obtained": "El sistema PERMITIÓ transferir $325.51 desde 28662 cuyo saldo era $325.50: 'Transfer Complete!'. La cuenta 28662 quedó en -$0.01. No valida saldo insuficiente.",
+      "evidence": "CP-09_H01_saldo_negativo.jpg",
+      "notes": "Ver hallazgo H-01."
+    },
+    "CP-11": {
+      "verdict": "Falló",
+      "obtained": "El pago de $25.00 desde 28773 se confirmó ('Bill Payment Complete'), pero el saldo de 28773 permaneció en $515.51 y no se registró ningún débito en la actividad de la cuenta.",
+      "evidence": "CP-11_H02_billpay_no_descuenta.jpg",
+      "notes": "Ver hallazgo H-02. La confirmación se mostró correctamente, pero el débito esperado no se aplicó."
+    },
+    "CP-12": {
+      "verdict": "Pasó",
+      "obtained": "El formulario muestra validación en cada campo obligatorio ('Payee name is required.', 'Address is required.', 'The amount cannot be empty.', etc.) y no procesa el pago.",
+      "evidence": "CP-12_billpay_validacion_campos.jpg",
+      "notes": ""
+    },
+    "CP-13": {
+      "verdict": "Falló",
+      "obtained": "Al pagar $1000.00 (mayor al saldo de $515.51) el sistema no mostró una validación de saldo insuficiente, sino 'An internal error has occurred and has been logged.'. Tras el intento, el Accounts Overview quedó devolviendo el mismo error interno de forma persistente.",
+      "evidence": "CP-13_H03_billpay_error_interno.jpg",
+      "notes": "Ver hallazgo H-03."
+    }
+  },
+  "findings": [
+    {
+      "id": "H-01",
+      "title": "Transferencia permite exceder el saldo disponible (sin validación de fondos)",
+      "summary": "El sistema procesa una transferencia por un monto mayor al saldo de la cuenta de origen, dejándola con saldo negativo.",
+      "steps": "1. Iniciar sesión. 2. Con la cuenta 28662 en $325.50, abrir Transfer Funds. 3. Transferir $325.51 (saldo + 0.01) de 28662 a 28773. 4. Enviar y revisar Accounts Overview.",
+      "expected": "La transferencia se rechaza y ningún saldo cambia (RF-09).",
+      "obtained": "La transferencia se completa ('Transfer Complete!') y la cuenta 28662 queda en -$0.01.",
+      "severity": "Alta",
+      "evidence": "CP-09_H01_transferencia_sobregiro.jpg; CP-09_H01_saldo_negativo.jpg"
+    },
+    {
+      "id": "H-02",
+      "title": "Bill Pay confirma el pago pero no descuenta el saldo ni registra la transacción",
+      "summary": "Un pago de servicios se reporta como exitoso, pero la cuenta de origen no se debita ni muestra el movimiento en su actividad.",
+      "steps": "1. Iniciar sesión. 2. Abrir Bill Pay. 3. Completar beneficiario válido y monto $25.00 desde la cuenta 28773 ($515.51). 4. Enviar. 5. Revisar saldo y actividad de 28773.",
+      "expected": "El pago se descuenta de la cuenta seleccionada y queda registrado como operación consultable (RF-11).",
+      "obtained": "Se muestra 'Bill Payment Complete', pero el saldo de 28773 sigue en $515.51 y no aparece el débito en la actividad de la cuenta.",
+      "severity": "Media",
+      "evidence": "CP-11_H02_billpay_no_descuenta.jpg"
+    },
+    {
+      "id": "H-03",
+      "title": "Bill Pay con monto mayor al saldo produce error interno y deja el Accounts Overview inoperable",
+      "summary": "En lugar de validar saldo insuficiente, el pago lanza un error interno del servidor; después el resumen de cuentas queda devolviendo el mismo error de forma persistente.",
+      "steps": "1. Iniciar sesión. 2. Abrir Bill Pay. 3. Completar beneficiario válido y monto $1000.00 (mayor al saldo) desde 28773. 4. Enviar. 5. Intentar abrir Accounts Overview y recargar.",
+      "expected": "El pago se rechaza con una validación comprensible y el saldo no cambia (RF-13).",
+      "obtained": "Aparece 'An internal error has occurred and has been logged.' y el Accounts Overview queda mostrando el mismo error interno al recargar.",
+      "severity": "Alta",
+      "evidence": "CP-13_H03_billpay_error_interno.jpg; CP-13_H03_overview_roto.jpg"
+    }
+  ]
+}
