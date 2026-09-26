@@ -1,5 +1,5 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from 'react'
-import { businessRules, clientBlackBoxExamples, clientFunctionalities, clientNonFunctionalRequirements, clientRequirements, designTechniques, Finding, initialCases, initialFindings, navItems, NavKey, Priority, requirements, TechniqueCell, TestCase, testRun, TestStatus } from './data'
+import { businessRules, clientBlackBoxExamples, clientFunctionalities, clientNonFunctionalRequirements, clientRequirements, designTechniques, Finding, initialCases, initialFindings, navItems, NavKey, Priority, requirements, TechniqueCell, TestCase, TestStatus } from './data'
 
 const priorityClass: Record<Priority, string> = { Alta: 'high', Media: 'medium', Baja: 'low' }
 const statusClass: Record<TestStatus, string> = { Pendiente: 'pending', 'Pasó': 'passed', 'Falló': 'failed', Bloqueado: 'blocked' }
@@ -142,7 +142,6 @@ function App() {
           {activeNav === 'cases' && <Cases cases={filteredCases} filter={caseFilter} setFilter={setCaseFilter} selectedCase={selectedCase} setSelectedCase={setSelectedCase} />}
           {activeNav === 'techniques' && <Techniques />}
           {activeNav === 'execution' && <Execution cases={highCases} updateStatus={updateStatus} toggleEvidence={toggleEvidence} />}
-          {activeNav === 'management' && <Management cases={highCases} findings={findings} />}
           {activeNav === 'findings' && <Findings findings={findings} showForm={showFindingForm} setShowForm={setShowFindingForm} onSubmit={addFinding} />}
         </div>
       </main>
@@ -234,49 +233,6 @@ function Techniques() {
 
 function Execution({ cases, updateStatus, toggleEvidence }: { cases: TestCase[]; updateStatus: (id: string, status: TestStatus) => void; toggleEvidence: (id: string) => void }) {
   return <><PageIntro eyebrow="04 · Ejecución" title="Ejecución crítica" description="Solo se ejecutan primero los casos de prioridad alta. Cada veredicto necesita evidencia del sistema real." action={<Badge tone="high">{cases.filter((item) => item.status !== 'Pendiente').length}/{cases.length} listos</Badge>} /><div className="execution-banner"><div className="banner-icon"><Icon name="play" size={21} /></div><div><strong>Antes / operación / después</strong><span>Registra saldo inicial, confirmación, saldo final e historial.</span></div><a className="text-button" href="https://parabank.parasoft.com/parabank/index.htm" target="_blank" rel="noreferrer">Ir a ParaBank <Icon name="external" size={15} /></a></div><div className="execution-list">{cases.map((item) => <div className="execution-card" key={item.id}><div className="execution-head"><div><span className="case-id">{item.id}</span><h3>{item.condition}</h3></div><Badge tone={statusClass[item.status]}>{item.status}</Badge></div><div className="execution-info"><div><span className="micro-label">Resultado esperado</span><p>{item.expected}</p></div>{item.obtained && <div><span className="micro-label">Resultado obtenido</span><p>{item.obtained}</p></div>}<div><span className="micro-label">Evidencia</span>{item.evidenceImage ? <a className="evidence-link" href={evidenceUrl(item.evidenceImage)} target="_blank" rel="noreferrer"><img className="evidence-thumb" src={evidenceUrl(item.evidenceImage)} alt={`Evidencia ${item.id}`} loading="lazy" /></a> : <p className={item.evidence ? 'evidence-ready' : 'evidence-pending'}>{item.evidence ? 'Captura registrada' : 'Pendiente de captura'}</p>}</div></div><div className="execution-actions"><button className="evidence-chip" onClick={() => toggleEvidence(item.id)}><Icon name={item.evidence ? 'check' : 'clock'} size={15} />{item.evidence ? 'Evidencia lista' : 'Marcar evidencia'}</button><label>Veredicto<select value={item.status} onChange={(event) => updateStatus(item.id, event.target.value as TestStatus)}><option>Pendiente</option><option>Pasó</option><option>Falló</option><option>Bloqueado</option></select></label></div></div>)}</div></>
-}
-
-function Management({ cases, findings }: { cases: TestCase[]; findings: Finding[] }) {
-  const total = cases.length
-  const passed = cases.filter((c) => c.status === 'Pasó').length
-  const failed = cases.filter((c) => c.status === 'Falló').length
-  const blocked = cases.filter((c) => c.status === 'Bloqueado').length
-  const executed = cases.filter((c) => c.status !== 'Pendiente').length
-  const passRate = total ? Math.round((passed / total) * 100) : 0
-  const runStatus: TestStatus = failed > 0 ? 'Falló' : blocked > 0 ? 'Bloqueado' : 'Pasó'
-  const features = Array.from(new Set(cases.map((c) => c.feature)))
-  const groups = features.map((feature) => ({ feature, items: cases.filter((c) => c.feature === feature) }))
-  const C = 2 * Math.PI * 52
-  return <><PageIntro eyebrow="Gestión de pruebas" title="Gestión de pruebas" description="Reporte de la corrida de casos de prioridad alta ejecutada sobre el sistema real: estado, avance y trazabilidad por funcionalidad." action={<Badge tone={statusClass[runStatus]}>{runStatus}</Badge>} />
-    <div className="mgmt-top">
-      <div className="mgmt-meta-card">
-        <span className="micro-label">{testRun.title}</span>
-        <dl className="mgmt-meta"><div><dt>Sistema</dt><dd>{testRun.system}</dd></div><div><dt>Equipo</dt><dd>{testRun.team}</dd></div><div><dt>Fecha</dt><dd>{testRun.date}</dd></div><div><dt>Usuario de prueba</dt><dd>{testRun.testUser}</dd></div><div><dt>Cuentas</dt><dd>{testRun.accounts}</dd></div></dl>
-      </div>
-      <div className="mgmt-rate-card">
-        <svg className="mgmt-donut" viewBox="0 0 128 128" role="img" aria-label={`${passRate}% de casos aprobados`}>
-          <circle cx="64" cy="64" r="52" fill="none" stroke="var(--surface-strong)" strokeWidth="12" />
-          <circle cx="64" cy="64" r="52" fill="none" stroke="var(--ink)" strokeWidth="12" strokeLinecap="round" strokeDasharray={`${(passRate / 100) * C} ${C}`} transform="rotate(-90 64 64)" />
-          <text x="64" y="60" textAnchor="middle" className="mgmt-donut-value">{passRate}%</text>
-          <text x="64" y="80" textAnchor="middle" className="mgmt-donut-label">aprobados</text>
-        </svg>
-        <div className="mgmt-stats">
-          <div><strong>{executed}/{total}</strong><span>ejecutados</span></div>
-          <div><strong>{passed}</strong><span>pasaron</span></div>
-          <div><strong>{failed}</strong><span>fallaron</span></div>
-          <div><strong>{findings.length}</strong><span>hallazgos</span></div>
-        </div>
-      </div>
-    </div>
-    <div className="mgmt-suites">{groups.map((g) => <section className="mgmt-suite" key={g.feature}>
-      <div className="mgmt-suite-head"><h3>{g.feature}</h3><span>{g.items.length} caso(s)</span></div>
-      <div className="mgmt-rows">{g.items.map((c) => <div className="mgmt-row" key={c.id}>
-        <span className="case-id">{c.id}</span>
-        <div className="mgmt-row-main"><strong>{c.condition}</strong><small>{c.requirement} · {c.technique}</small></div>
-        <Badge tone={statusClass[c.status]}>{c.status}</Badge>
-      </div>)}</div>
-    </section>)}</div>
-  </>
 }
 
 function Findings({ findings, showForm, setShowForm, onSubmit }: { findings: Finding[]; showForm: boolean; setShowForm: (value: boolean) => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {

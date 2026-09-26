@@ -1,6 +1,6 @@
 export type Priority = 'Alta' | 'Media' | 'Baja'
 export type TestStatus = 'Pendiente' | 'Pasó' | 'Falló' | 'Bloqueado'
-export type NavKey = 'overview' | 'plan' | 'traceability' | 'cases' | 'techniques' | 'execution' | 'management' | 'findings'
+export type NavKey = 'overview' | 'plan' | 'traceability' | 'cases' | 'techniques' | 'execution' | 'findings'
 
 export type Requirement = {
   id: string
@@ -231,19 +231,8 @@ export const navItems: { key: NavKey; label: string; icon: string }[] = [
   { key: 'cases', label: 'Casos', icon: 'check' },
   { key: 'techniques', label: 'Técnicas', icon: 'spark' },
   { key: 'execution', label: 'Ejecución', icon: 'play' },
-  { key: 'management', label: 'Gestión', icon: 'grid' },
   { key: 'findings', label: 'Hallazgos', icon: 'clipboard' },
 ]
-
-// Metadatos de la corrida real ejecutada sobre ParaBank (24-09-2026).
-export const testRun = {
-  title: 'Ejecución CP Prioridad Alta — Proyecto 1',
-  system: 'ParaBank',
-  team: 'Gianpier Segovia · Kalos Lazo',
-  date: '24-09-2026',
-  testUser: 'gsegovia_qa_5821',
-  accounts: '28662 (Checking) · 28773 (Savings)',
-}
 
 // Reglas de negocio verificadas, cada una junto al caso que la evalúa y su
 // técnica. Se incluyen solo las reglas que tienen un caso de prueba asociado.
