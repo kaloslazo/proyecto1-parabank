@@ -199,7 +199,7 @@ def build(functionalities: list[dict], requirements: list[dict]) -> None:
     ))
     story.extend(bullets([
         "Sistema real: https://parabank.parasoft.com/parabank/index.htm",
-        "Base de pruebas: 8 funcionalidades y 22 requisitos funcionales del primer avance.",
+        "Base de pruebas: 8 funcionalidades y 36 requisitos funcionales del primer avance.",
         "Equipo: 2 integrantes; las pruebas se ejecutarán con datos ficticios.",
         "Enfoque principal: pruebas basadas en riesgo y diseño de caja negra.",
     ]))
@@ -229,7 +229,7 @@ def build(functionalities: list[dict], requirements: list[dict]) -> None:
     ]))
     story.append(Paragraph("Criterios de alcance", styles["Subsection"]))
     story.extend(bullets([
-        "Cobertura trazable de los 22 RF y de las 8 funcionalidades.",
+        "Cobertura trazable de los 36 RF y de las 8 funcionalidades.",
         "Diseño mínimo de 15 casos sobre al menos 4 funcionalidades, priorizando riesgo alto y medio.",
         "Ejecución manual de todos los casos clasificados como prioridad alta.",
     ]))
@@ -275,7 +275,7 @@ def build(functionalities: list[dict], requirements: list[dict]) -> None:
     levels = [
         ["Componente", "No aplicable de forma directa", "Sin acceso al código fuente; se documenta como fuera de alcance."],
         ["Integración", "Profundidad alta", "Transferencia, bill pay e historial: consistencia entre formularios, cuentas y transacciones."],
-        ["Sistema", "Cobertura completa", "Las 8 funcionalidades y los 22 RF se validan en el sistema desplegado."],
+        ["Sistema", "Cobertura completa", "Las 8 funcionalidades y los 36 RF se validan en el sistema desplegado."],
         ["Aceptación", "Flujos críticos", "Registro, apertura, transferencia y pago con resultados comprensibles para el cliente."],
     ]
     level_rows = [[paragraph("Nivel", "TableHeader"), paragraph("Cobertura", "TableHeader"), paragraph("Aplicación", "TableHeader")]]
@@ -283,7 +283,7 @@ def build(functionalities: list[dict], requirements: list[dict]) -> None:
     story.append(styled_table(level_rows, [28 * mm, 39 * mm, 100 * mm]))
     story.append(Paragraph("Tipos de prueba", styles["Subsection"]))
     story.extend(bullets([
-        "Funcionales: entradas, reglas, mensajes y persistencia para los 22 RF.",
+        "Funcionales: entradas, reglas, mensajes y persistencia para los 36 RF.",
         "Integridad de datos: débito, crédito, saldos e historial en operaciones monetarias.",
         "Sesión y acceso: autenticación inválida, autenticación válida e inactividad.",
         "Rendimiento básico: tiempo observable menor a 3 segundos en una operación válida.",
@@ -305,7 +305,7 @@ def build(functionalities: list[dict], requirements: list[dict]) -> None:
     story.append(Paragraph("Criterios de entrada y salida", styles["Section"]))
     criteria_rows = [[paragraph("Entrada", "TableHeader"), paragraph("Salida", "TableHeader")]]
     entry = "URL disponible; RF revisados; cuenta de prueba creada; dos cuentas propias; saldos conocidos; navegador estable; datos ficticios preparados."
-    exit_criteria = "22 RF trazados; mínimo 15 casos diseñados; todos los casos altos ejecutados; evidencias guardadas; hallazgos documentados; bloqueos justificados."
+    exit_criteria = "36 RF trazados; mínimo 15 casos diseñados; todos los casos altos ejecutados; evidencias guardadas; hallazgos documentados; bloqueos justificados."
     criteria_rows.append([paragraph(entry), paragraph(exit_criteria)])
     story.append(styled_table(criteria_rows, [83.5 * mm, 83.5 * mm]))
 
@@ -323,7 +323,7 @@ def build(functionalities: list[dict], requirements: list[dict]) -> None:
     story.append(Paragraph("8. Tareas de prueba y estimación", styles["Section"]))
     tasks = [
         ["Planificación", "Alcance, riesgos, estrategia y criterios.", "4 h"],
-        ["Análisis", "Condiciones y trazabilidad de 22 RF.", "6 h"],
+        ["Análisis", "Condiciones y trazabilidad de 36 RF.", "6 h"],
         ["Diseño", "Casos, técnicas y datos de prueba.", "10 h"],
         ["Preparación", "Usuarios, cuentas, saldos y entorno.", "3 h"],
         ["Ejecución", "Casos altos y captura de evidencia.", "8 h"],
@@ -354,7 +354,6 @@ def build(functionalities: list[dict], requirements: list[dict]) -> None:
         ["Kalos Lazo", "Planificación, requisitos, trazabilidad y consolidación del informe."],
         ["Gianpier Segovia", "Diseño de casos, preparación de datos y coordinación de ejecución."],
         ["Ambos integrantes", "Revisión cruzada, ejecución de casos altos, análisis de hallazgos y exposición."],
-        ["Docente", "Revisión académica, retroalimentación y aprobación de entregables."],
     ]
     responsibility_rows += [[paragraph(a, "TableCellStrong"), paragraph(b)] for a, b in responsibilities]
     story.append(styled_table(responsibility_rows, [46 * mm, 121 * mm]))
@@ -375,8 +374,6 @@ def build(functionalities: list[dict], requirements: list[dict]) -> None:
     schedule_rows = [[paragraph("Hito", "TableHeader"), paragraph("Momento", "TableHeader"), paragraph("Resultado", "TableHeader")]]
     schedule_rows += [[paragraph(a, "TableCellStrong"), paragraph(b), paragraph(c)] for a, b, c in schedule]
     story.append(styled_table(schedule_rows, [25 * mm, 45 * mm, 97 * mm]))
-    story.append(Spacer(1, 7 * mm))
-    story.append(paragraph("Nota de control: las fechas posteriores al primer avance deben alinearse con el calendario oficial publicado en Canvas."))
 
     doc.build(story, onFirstPage=footer, onLaterPages=footer)
 
@@ -395,7 +392,7 @@ def validate(functionalities: list[dict], requirements: list[dict]) -> None:
     missing = [section for section in required_sections if section not in text]
     if missing:
         raise RuntimeError(f"Secciones faltantes: {missing}")
-    if len(functionalities) != 8 or len(requirements) != 22:
+    if len(functionalities) != 8 or len(requirements) != 36:
         raise RuntimeError("La fuente del proyecto no conserva la cobertura esperada.")
     if not all(item["name"] in normalized_text for item in functionalities):
         raise RuntimeError("Falta una funcionalidad en la tabla de alcance.")

@@ -2,7 +2,7 @@
 
 Un solo informe con secciones diferenciadas, alineado a la Guía de Entrega:
   1. Planificación de pruebas (resumen + estrategia justificada + niveles)
-  2. Análisis de pruebas (priorización de los 22 RF por riesgo)
+  2. Análisis de pruebas (priorización de los 36 RF por riesgo)
   3. Diseño de pruebas (18 casos + justificación de técnicas)
   4. Ejecución de casos críticos y hallazgos (desde execution_results.json)
 
@@ -89,7 +89,7 @@ def verdict_color(v):
     return {"Pasó": GOOD, "Falló": BAD, "Bloqueado": WARN}.get(v, MUTED)
 
 
-# --- Contenido: priorización de los 22 RF (según el primer avance) ----------
+# --- Contenido: priorización de los 36 RF (según el primer avance) ----------
 RF_PRIORITY = [
     ("RF-01", "F-01", "Registrar cliente con datos válidos y usuario único", "Media"),
     ("RF-02", "F-01", "Rechazar registro con usuario ya existente", "Alta"),
@@ -113,6 +113,20 @@ RF_PRIORITY = [
     ("RF-20", "F-08", "Inicializar o limpiar la base de datos", "Media"),
     ("RF-21", "F-08", "Configurar parámetros numéricos del banco", "Media"),
     ("RF-22", "F-08", "Seleccionar proveedor y procesador de préstamos", "Baja"),
+    ("RF-23", "F-01", "Cerrar sesión y volver al estado no autenticado", "Alta"),
+    ("RF-24", "F-01", "Recuperar acceso con datos personales correctos", "Media"),
+    ("RF-25", "F-02", "Fondear la cuenta nueva con el saldo mínimo configurado", "Alta"),
+    ("RF-26", "F-02", "Abrir Checking o Savings y reflejar el tipo elegido", "Baja"),
+    ("RF-27", "F-03", "Registrar la transferencia en el historial de ambas cuentas", "Media"),
+    ("RF-28", "F-03", "Confirmar la transferencia con monto y cuentas", "Media"),
+    ("RF-29", "F-04", "Exigir coincidencia de cuenta y su confirmación en bill pay", "Alta"),
+    ("RF-30", "F-04", "Confirmar el pago con beneficiario, monto y cuenta", "Media"),
+    ("RF-31", "F-05", "Abrir el detalle de una transacción desde la búsqueda", "Media"),
+    ("RF-32", "F-05", "Informar cuando la búsqueda no arroja coincidencias", "Baja"),
+    ("RF-33", "F-06", "Precargar los datos vigentes del perfil al actualizar", "Baja"),
+    ("RF-34", "F-07", "Crear la cuenta de préstamo y acreditar los fondos aprobados", "Alta"),
+    ("RF-35", "F-07", "Mostrar el detalle del resultado del préstamo", "Media"),
+    ("RF-36", "F-08", "Configurar los parámetros de aprobación de préstamos", "Baja"),
 ]
 
 HIGH_JUSTIFY = [
@@ -125,6 +139,10 @@ HIGH_JUSTIFY = [
     ("RF-11", "Mueve dinero hacia terceros; un pago procesado con datos incorrectos causa pérdida directa y reclamos difíciles de revertir."),
     ("RF-12", "La validación de campos evita pagos a beneficiarios mal definidos o por montos inválidos."),
     ("RF-13", "Protege la integridad del saldo impidiendo pagos que exceden los fondos de la cuenta."),
+    ("RF-23", "El cierre de sesión es un control de acceso: una sesión que no termina deja cuentas y dinero expuestos en equipos compartidos."),
+    ("RF-25", "El fondeo debita dinero real de la cuenta de origen al abrir la cuenta; un error de saldo inicial produce descuadres desde el primer momento."),
+    ("RF-29", "La confirmación de la cuenta del beneficiario evita enviar dinero a un tercero equivocado, un error difícil de revertir."),
+    ("RF-34", "La aprobación del préstamo crea una cuenta y acredita fondos; un resultado mal aplicado inyecta dinero indebido o niega uno válido."),
 ]
 
 TECHNIQUE_JUSTIFY = [
@@ -182,7 +200,7 @@ def build():
     levels = [
         ("Componente", "Fuera de alcance", "No hay acceso al código fuente ni al pipeline de ParaBank."),
         ("Integración", "Profundidad alta", "Consistencia entre formularios, cuentas, saldos e historial en transferencias y bill pay."),
-        ("Sistema", "Cobertura completa", "Las 8 funcionalidades y los 22 RF se validan sobre el sistema desplegado."),
+        ("Sistema", "Cobertura completa", "Las 8 funcionalidades y los 36 RF se validan sobre el sistema desplegado."),
         ("Aceptación", "Flujos críticos", "Registro, apertura, transferencia y pago con resultados comprensibles para el cliente."),
     ]
     rows = [[P("Nivel", "TH"), P("Profundidad", "TH"), P("Aplicación", "TH")]]
@@ -197,7 +215,7 @@ def build():
     n_alta = sum(1 for r in RF_PRIORITY if r[3] == "Alta")
     n_media = sum(1 for r in RF_PRIORITY if r[3] == "Media")
     n_baja = sum(1 for r in RF_PRIORITY if r[3] == "Baja")
-    S.append(P(f"Se priorizan por riesgo los 22 requisitos funcionales del primer avance: {n_alta} de prioridad alta, {n_media} media y {n_baja} baja. El criterio es el impacto en el negocio bancario: mueven o comprometen dinero, o controlan el acceso -> alta; soportan la operación o la trazabilidad -> media; validaciones secundarias o configuración -> baja.", "Body"))
+    S.append(P(f"Se priorizan por riesgo los {len(RF_PRIORITY)} requisitos funcionales del primer avance: {n_alta} de prioridad alta, {n_media} media y {n_baja} baja. El criterio es el impacto en el negocio bancario: mueven o comprometen dinero, o controlan el acceso -> alta; soportan la operación o la trazabilidad -> media; validaciones secundarias o configuración -> baja.", "Body"))
     rows = [[P("RF", "TH"), P("Func.", "TH"), P("Requisito", "TH"), P("Prioridad", "TH")]]
     for rid, fid, desc, pr in RF_PRIORITY:
         pr_style = "TCS"
@@ -211,7 +229,8 @@ def build():
 
     # ---- 3. Diseño de pruebas ----
     S.append(P("3. Diseño de pruebas", "H1"))
-    S.append(P(f"Se derivan {len(CASES)} casos de prueba de los RF priorizados, cubriendo 6 funcionalidades. Los {len(HIGH_CASES)} casos de prioridad alta corresponden a los 9 RF de riesgo alto y son los que se ejecutan sobre el sistema real (sección 4). Cada caso indica su RF, prioridad, técnica de diseño, precondiciones, pasos, datos y resultado esperado (detalle completo en la matriz Excel).", "Body"))
+    n_alta_rf = sum(1 for r in RF_PRIORITY if r[3] == "Alta")
+    S.append(P(f"Se derivan {len(CASES)} casos de prueba de los RF priorizados, cubriendo 6 funcionalidades. De los {n_alta_rf} RF de riesgo alto del catálogo, {len(HIGH_CASES)} corresponden a los flujos monetarios y de acceso seleccionados como núcleo crítico y son los que se ejecutan sobre el sistema real (sección 4); el resto de RF de alto riesgo queda diseñado como requisito verificable para una iteración posterior. Cada caso indica su RF, prioridad, técnica de diseño, precondiciones, pasos, datos y resultado esperado (detalle completo en la matriz Excel).", "Body"))
     S.append(P("Técnicas de diseño aplicadas (caja negra) y su justificación", "H2"))
     trows = [[P("Técnica", "TH"), P("Casos", "TH"), P("Por qué se aplica", "TH")]]
     trows += [[P(a, "TCS"), P(b, "TC"), P(c, "TC")] for a, b, c in TECHNIQUE_JUSTIFY]

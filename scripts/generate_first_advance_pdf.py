@@ -229,10 +229,10 @@ def validate_pdf(functionalities: list[dict], requirements: list[dict]) -> None:
     missing = [term for term in expected_terms if term not in extracted]
     if missing:
         raise RuntimeError(f"Contenido faltante en el PDF: {missing}")
-    if len(functionalities) != 8 or len(requirements) != 22:
-        raise RuntimeError("La fuente no contiene las 8 funcionalidades y 22 requisitos esperados.")
-    if len(reader.pages) != 10:
-        raise RuntimeError(f"Se esperaban 10 páginas y se generaron {len(reader.pages)}.")
+    if len(functionalities) != 8 or len(requirements) != 36:
+        raise RuntimeError("La fuente no contiene las 8 funcionalidades y 36 requisitos esperados.")
+    if len(reader.pages) < 10:
+        raise RuntimeError(f"Se esperaban al menos 10 páginas y se generaron {len(reader.pages)}.")
     print(json.dumps({
         "output": str(OUTPUT), "pages": len(reader.pages),
         "functionalities": len(functionalities), "requirements": len(requirements),

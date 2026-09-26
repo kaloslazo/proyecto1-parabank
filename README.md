@@ -5,7 +5,7 @@ Dashboard de trabajo para el Proyecto 1 de **Pruebas y Verificación de Software
 El producto convierte el caso de banca digital en un espacio operativo para el primer avance y las siguientes etapas:
 
 - documentar las 8 funcionalidades del alcance de ParaBank;
-- presentar 22 requisitos verificables en formato RF, organizados por funcionalidad;
+- presentar 36 requisitos verificables en formato RF, organizados por funcionalidad;
 
 - planificar la estrategia de pruebas;
 - mantener la matriz de trazabilidad;

@@ -1,7 +1,7 @@
 """Genera la Matriz de Casos de Prueba (ParaBank) sobre la plantilla oficial.
 
 Rellena las hojas 'Casos de Prueba', 'Ejecución' y 'Hallazgos' con el diseño
-del Caso 1 (ParaBank), mapeado a los 22 RF del primer avance. Conserva la hoja
+del Caso 1 (ParaBank), mapeado a los 36 RF del primer avance. Conserva la hoja
 'Instrucciones' y el estilo visual de la plantilla.
 
 Los veredictos de ejecución y los hallazgos observados se cargan desde

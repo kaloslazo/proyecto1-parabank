@@ -1,6 +1,6 @@
 export type Priority = 'Alta' | 'Media' | 'Baja'
 export type TestStatus = 'Pendiente' | 'Pasó' | 'Falló' | 'Bloqueado'
-export type NavKey = 'overview' | 'plan' | 'traceability' | 'cases' | 'execution' | 'findings'
+export type NavKey = 'overview' | 'plan' | 'traceability' | 'cases' | 'techniques' | 'execution' | 'findings'
 
 export type Requirement = {
   id: string
@@ -69,14 +69,14 @@ export type ClientNonFunctionalRequirement = {
 }
 
 export const clientFunctionalities: ClientFunctionality[] = [
-  { id: 'F-01', name: 'Registro y login de clientes', location: 'Inicio y formulario de registro', actor: 'Cliente', requirementIds: ['RF-01', 'RF-02', 'RF-03', 'RF-04'] },
-  { id: 'F-02', name: 'Apertura de nuevas cuentas', location: 'Menú de la cuenta: Abrir nueva cuenta', actor: 'Cliente', requirementIds: ['RF-05', 'RF-06', 'RF-07'] },
-  { id: 'F-03', name: 'Transferencia entre cuentas propias', location: 'Menú de la cuenta: Transferir fondos', actor: 'Cliente', requirementIds: ['RF-08', 'RF-09', 'RF-10'] },
-  { id: 'F-04', name: 'Pago de servicios a terceros (Bill Pay)', location: 'Menú de la cuenta: Pagar servicios', actor: 'Cliente', requirementIds: ['RF-11', 'RF-12', 'RF-13'] },
-  { id: 'F-05', name: 'Búsqueda de transacciones', location: 'Menú de la cuenta: Buscar transacciones e historial', actor: 'Cliente', requirementIds: ['RF-14', 'RF-15'] },
-  { id: 'F-06', name: 'Actualización de datos de contacto', location: 'Menú de la cuenta: Actualizar datos de contacto', actor: 'Cliente', requirementIds: ['RF-16', 'RF-17'] },
-  { id: 'F-07', name: 'Solicitud de préstamos', location: 'Menú de la cuenta: Solicitar préstamo', actor: 'Cliente', requirementIds: ['RF-18', 'RF-19'] },
-  { id: 'F-08', name: 'Panel de administración', location: 'Panel de administración del banco', actor: 'Administrador', requirementIds: ['RF-20', 'RF-21', 'RF-22'] },
+  { id: 'F-01', name: 'Registro y login de clientes', location: 'Inicio y formulario de registro', actor: 'Cliente', requirementIds: ['RF-01', 'RF-02', 'RF-03', 'RF-04', 'RF-23', 'RF-24'] },
+  { id: 'F-02', name: 'Apertura de nuevas cuentas', location: 'Menú de la cuenta: Abrir nueva cuenta', actor: 'Cliente', requirementIds: ['RF-05', 'RF-06', 'RF-07', 'RF-25', 'RF-26'] },
+  { id: 'F-03', name: 'Transferencia entre cuentas propias', location: 'Menú de la cuenta: Transferir fondos', actor: 'Cliente', requirementIds: ['RF-08', 'RF-09', 'RF-10', 'RF-27', 'RF-28'] },
+  { id: 'F-04', name: 'Pago de servicios a terceros (Bill Pay)', location: 'Menú de la cuenta: Pagar servicios', actor: 'Cliente', requirementIds: ['RF-11', 'RF-12', 'RF-13', 'RF-29', 'RF-30'] },
+  { id: 'F-05', name: 'Búsqueda de transacciones', location: 'Menú de la cuenta: Buscar transacciones e historial', actor: 'Cliente', requirementIds: ['RF-14', 'RF-15', 'RF-31', 'RF-32'] },
+  { id: 'F-06', name: 'Actualización de datos de contacto', location: 'Menú de la cuenta: Actualizar datos de contacto', actor: 'Cliente', requirementIds: ['RF-16', 'RF-17', 'RF-33'] },
+  { id: 'F-07', name: 'Solicitud de préstamos', location: 'Menú de la cuenta: Solicitar préstamo', actor: 'Cliente', requirementIds: ['RF-18', 'RF-19', 'RF-34', 'RF-35'] },
+  { id: 'F-08', name: 'Panel de administración', location: 'Panel de administración del banco', actor: 'Administrador', requirementIds: ['RF-20', 'RF-21', 'RF-22', 'RF-36'] },
 ]
 
 export const clientRequirements: ClientRequirement[] = [
@@ -102,6 +102,20 @@ export const clientRequirements: ClientRequirement[] = [
   { id: 'RF-20', functionalityId: 'F-08', requirement: 'El panel debe permitir inicializar o limpiar la base de datos mediante las acciones administrativas disponibles.', actor: 'Administrador', dataRules: 'Acción Initialize o Clean seleccionada en la pantalla Administration.', expected: 'La acción se ejecuta y el panel informa su resultado.', priority: 'Alta' },
   { id: 'RF-21', functionalityId: 'F-08', requirement: 'El panel debe permitir configurar los valores numéricos de saldo inicial, saldo mínimo y umbral del banco.', actor: 'Administrador', dataRules: 'Valores numéricos válidos; probar también campos vacíos, negativos o no numéricos.', expected: 'Los parámetros se pueden enviar y el sistema muestra una confirmación o validación.', priority: 'Alta' },
   { id: 'RF-22', functionalityId: 'F-08', requirement: 'El panel debe permitir seleccionar el proveedor y procesador de préstamos disponibles.', actor: 'Administrador', dataRules: 'Opciones válidas de Loan Provider y Loan Processor.', expected: 'La selección queda disponible para la configuración del banco.', priority: 'Alta' },
+  { id: 'RF-23', functionalityId: 'F-01', requirement: 'El sistema debe permitir cerrar la sesión del cliente y devolverlo al estado no autenticado.', actor: 'Cliente', dataRules: 'Cliente con sesión activa que selecciona la opción de cerrar sesión (Log Out).', expected: 'La sesión finaliza, se muestra la pantalla de inicio y las funciones protegidas dejan de estar accesibles sin volver a autenticarse.', priority: 'Alta' },
+  { id: 'RF-24', functionalityId: 'F-01', requirement: 'El sistema debe permitir recuperar los datos de acceso cuando la información personal ingresada coincida con un cliente registrado.', actor: 'Cliente', dataRules: 'Formulario "Forgot login info" con nombre, apellido, dirección, ciudad, estado, código postal y SSN; datos que coinciden y datos que no coinciden.', expected: 'Con datos correctos se muestran el usuario y la contraseña; con datos que no coinciden se rechaza la recuperación con un mensaje claro.', priority: 'Media' },
+  { id: 'RF-25', functionalityId: 'F-02', requirement: 'El sistema debe fondear la nueva cuenta con el saldo mínimo configurado, debitándolo de la cuenta de fondeo seleccionada.', actor: 'Cliente', dataRules: 'Apertura válida con una cuenta de fondeo que tiene saldo suficiente para cubrir el saldo mínimo configurado.', expected: 'La cuenta nueva se crea con el saldo mínimo y la cuenta de fondeo se debita por ese mismo monto.', priority: 'Alta' },
+  { id: 'RF-26', functionalityId: 'F-02', requirement: 'El sistema debe permitir abrir tanto cuentas Checking como Savings y reflejar el tipo elegido en el resumen.', actor: 'Cliente', dataRules: 'Apertura con tipo Checking y, en otra iteración, con tipo Savings.', expected: 'Cada cuenta creada aparece en el resumen con el tipo seleccionado.', priority: 'Baja' },
+  { id: 'RF-27', functionalityId: 'F-03', requirement: 'El sistema debe registrar cada transferencia en el historial de la cuenta de origen y de la cuenta de destino.', actor: 'Cliente', dataRules: 'Transferencia válida ya procesada entre dos cuentas propias.', expected: 'La operación queda consultable en la actividad de ambas cuentas con su monto y fecha.', priority: 'Media' },
+  { id: 'RF-28', functionalityId: 'F-03', requirement: 'El sistema debe mostrar una confirmación de la transferencia con el monto, la cuenta de origen y la cuenta de destino.', actor: 'Cliente', dataRules: 'Transferencia válida enviada desde Transfer Funds.', expected: 'Se muestra un mensaje de confirmación que indica el monto y las cuentas involucradas.', priority: 'Media' },
+  { id: 'RF-29', functionalityId: 'F-04', requirement: 'El sistema debe exigir que el número de cuenta del beneficiario coincida con su confirmación antes de procesar el pago.', actor: 'Cliente', dataRules: 'Campos "Account" y "Verify Account" con valores iguales y, en otra iteración, con valores distintos.', expected: 'Si los valores no coinciden, el pago se rechaza y se solicita corregir la confirmación de la cuenta.', priority: 'Alta' },
+  { id: 'RF-30', functionalityId: 'F-04', requirement: 'El sistema debe mostrar una confirmación del pago de servicio con beneficiario, monto y cuenta de origen.', actor: 'Cliente', dataRules: 'Pago de servicio válido enviado desde Bill Pay.', expected: 'Se muestra un mensaje de confirmación que identifica al beneficiario, el monto y la cuenta debitada.', priority: 'Media' },
+  { id: 'RF-31', functionalityId: 'F-05', requirement: 'El sistema debe permitir abrir el detalle de una transacción desde los resultados de la búsqueda.', actor: 'Cliente', dataRules: 'Resultado de búsqueda con al menos una transacción existente.', expected: 'Al seleccionar una transacción se muestran su tipo, fecha y monto.', priority: 'Media' },
+  { id: 'RF-32', functionalityId: 'F-05', requirement: 'El sistema debe informar de forma clara cuando una búsqueda no arroja coincidencias.', actor: 'Cliente', dataRules: 'Búsqueda por fecha, monto o ID sin coincidencias en la cuenta.', expected: 'Se muestra un mensaje explícito de que no existen resultados, sin una lista vacía ambigua.', priority: 'Baja' },
+  { id: 'RF-33', functionalityId: 'F-06', requirement: 'El sistema debe precargar los datos actuales del perfil en el formulario de actualización de contacto.', actor: 'Cliente', dataRules: 'Cliente autenticado que abre Update Contact Info.', expected: 'El formulario muestra los valores vigentes de nombre, dirección, ciudad, estado, código postal y teléfono.', priority: 'Baja' },
+  { id: 'RF-34', functionalityId: 'F-07', requirement: 'El sistema debe crear la cuenta de préstamo y acreditar los fondos cuando una solicitud sea aprobada.', actor: 'Cliente', dataRules: 'Solicitud de préstamo aprobada según la regla de enganche configurada.', expected: 'Se crea una nueva cuenta de préstamo y el monto aprobado se acredita en la cuenta indicada.', priority: 'Alta' },
+  { id: 'RF-35', functionalityId: 'F-07', requirement: 'El sistema debe mostrar el detalle del resultado de la solicitud de préstamo.', actor: 'Cliente', dataRules: 'Solicitud de préstamo enviada, aprobada o rechazada.', expected: 'Se muestra el resultado (aprobado o rechazado), el monto solicitado y, si corresponde, la cuenta de préstamo creada.', priority: 'Media' },
+  { id: 'RF-36', functionalityId: 'F-08', requirement: 'El panel debe permitir configurar los parámetros de aprobación de préstamos (días mínimos y umbral requerido).', actor: 'Administrador', dataRules: 'Valores numéricos válidos de días mínimos y umbral; probar también valores vacíos o no numéricos.', expected: 'Los parámetros se envían y el sistema muestra una confirmación o una validación cuando el valor es inválido.', priority: 'Baja' },
 ]
 
 export const clientBlackBoxExamples: Record<string, ClientBlackBoxExample> = {
@@ -127,6 +141,20 @@ export const clientBlackBoxExamples: Record<string, ClientBlackBoxExample> = {
   'RF-20': { technique: 'Tablas de decisión y gráficos causa-efecto', example: 'Relacionar cada acción con su efecto: Clean debe limpiar los datos e Initialize debe restaurar los datos base.' },
   'RF-21': { technique: 'Partición de equivalencia', example: 'Enviar valores numéricos válidos y repetir con campos vacíos, negativos y texto; observar confirmación o validación.' },
   'RF-22': { technique: 'Tablas de decisión y gráficos causa-efecto', example: 'Seleccionar combinaciones disponibles de proveedor y procesador, guardar y comprobar que la configuración elegida permanezca activa.' },
+  'RF-23': { technique: 'Transición de estados', example: 'Con sesión iniciada, usar Log Out y luego intentar abrir una función protegida; el sistema debe volver al estado no autenticado y pedir credenciales.' },
+  'RF-24': { technique: 'Partición de equivalencia', example: 'Completar "Forgot login info" con datos que coinciden con un cliente y repetir con datos que no coinciden; solo el primer intento debe devolver el acceso.' },
+  'RF-25': { technique: 'Pruebas de caso de uso', example: 'Registrar el saldo de la cuenta de fondeo, abrir una cuenta nueva y verificar que el saldo mínimo se acredita en la cuenta creada y se debita del fondeo.' },
+  'RF-26': { technique: 'Partición de equivalencia', example: 'Abrir una cuenta Checking y otra Savings; comprobar que el resumen muestra cada cuenta con el tipo elegido.' },
+  'RF-27': { technique: 'Pruebas de caso de uso', example: 'Tras una transferencia válida, abrir la actividad de la cuenta de origen y de la de destino y comprobar que la operación aparece en ambas.' },
+  'RF-28': { technique: 'Pruebas de caso de uso', example: 'Enviar una transferencia válida y verificar que la confirmación indica el monto, la cuenta de origen y la de destino.' },
+  'RF-29': { technique: 'Tablas de decisión y gráficos causa-efecto', example: 'Enviar un pago con "Account" y "Verify Account" iguales y luego con valores distintos; solo la confirmación coincidente debe procesarse.' },
+  'RF-30': { technique: 'Pruebas de caso de uso', example: 'Procesar un pago válido y comprobar que la confirmación identifica al beneficiario, el monto y la cuenta debitada.' },
+  'RF-31': { technique: 'Pruebas de caso de uso', example: 'Ejecutar una búsqueda con resultados y abrir el detalle de una transacción para verificar tipo, fecha y monto.' },
+  'RF-32': { technique: 'Partición de equivalencia', example: 'Buscar un valor existente y luego uno inexistente; el segundo debe mostrar un mensaje claro de sin resultados.' },
+  'RF-33': { technique: 'Pruebas de caso de uso', example: 'Abrir Update Contact Info y comprobar que los campos llegan precargados con los datos vigentes del perfil.' },
+  'RF-34': { technique: 'Pruebas de caso de uso', example: 'Aprobar un préstamo y verificar que se crea la cuenta de préstamo y que el monto se acredita en la cuenta indicada.' },
+  'RF-35': { technique: 'Pruebas de caso de uso', example: 'Solicitar un préstamo y verificar que el resultado muestra aprobado o rechazado, el monto y la cuenta creada cuando corresponde.' },
+  'RF-36': { technique: 'Partición de equivalencia', example: 'Enviar días mínimos y umbral con valores numéricos válidos y luego con vacíos o texto; observar confirmación o validación.' },
 }
 
 export const clientNonFunctionalRequirements: ClientNonFunctionalRequirement[] = [
@@ -201,6 +229,176 @@ export const navItems: { key: NavKey; label: string; icon: string }[] = [
   { key: 'plan', label: 'Funciones', icon: 'clipboard' },
   { key: 'traceability', label: 'Requisitos', icon: 'route' },
   { key: 'cases', label: 'Casos', icon: 'check' },
+  { key: 'techniques', label: 'Técnicas', icon: 'spark' },
   { key: 'execution', label: 'Ejecución', icon: 'play' },
   { key: 'findings', label: 'Hallazgos', icon: 'clipboard' },
+]
+
+// Derivación de las técnicas de diseño de caja negra: las clases/valores
+// concretos detrás de cada caso, para explicarlas en la exposición.
+export type TechniqueCell = string | { t: string; tone: 'ok' | 'bad' | 'muted' | 'strong' }
+
+export type TechniqueTable = {
+  title: string
+  columns: string[]
+  rows: TechniqueCell[][]
+}
+
+export type DesignTechnique = {
+  id: string
+  name: string
+  idea: string
+  why: string
+  cases: string
+  tables: TechniqueTable[]
+}
+
+export const designTechniques: DesignTechnique[] = [
+  {
+    id: 'EP',
+    name: 'Partición de equivalencia',
+    idea: 'Cada entrada se divide en clases que se comportan igual: válidas (CV) e inválidas (CI). Se prueba un representante por clase.',
+    why: 'Los campos tienen clases equivalentes; probar un valor por clase cubre lo mismo que probar cientos. Alternativa descartada: probar todos los valores posibles es inviable.',
+    cases: 'CP-01, CP-02, CP-03, CP-12, CP-15, CP-16',
+    tables: [
+      {
+        title: 'Login — usuario y contraseña (RF-03 / CP-03)',
+        columns: ['Clase', 'Ejemplo', 'Resultado esperado'],
+        rows: [
+          ['CV1', 'usuario válido + contraseña válida', { t: 'Inicia sesión (CP-04)', tone: 'ok' }],
+          ['CI1', 'usuario válido + contraseña incorrecta', { t: 'Rechazo (CP-03)', tone: 'bad' }],
+          ['CI2', 'usuario inexistente + cualquier contraseña', { t: 'Rechazo (CP-03)', tone: 'bad' }],
+          ['CI3', 'usuario y/o contraseña vacíos', { t: 'Rechazo', tone: 'bad' }],
+        ],
+      },
+      {
+        title: 'Registro — nombre de usuario (RF-01/RF-02 / CP-01, CP-02)',
+        columns: ['Clase', 'Ejemplo', 'Resultado esperado'],
+        rows: [
+          ['CV1', 'usuario nuevo + campos válidos', { t: 'Crea cuenta (CP-01)', tone: 'ok' }],
+          ['CI1', 'usuario ya registrado', { t: "Rechazo 'already exists' (CP-02)", tone: 'bad' }],
+          ['CI2', 'campo obligatorio vacío', { t: 'Rechazo', tone: 'bad' }],
+        ],
+      },
+      {
+        title: 'Bill Pay — validación por campo (RF-12 / CP-12)',
+        columns: ['Campo', 'Clase válida', 'Clases inválidas'],
+        rows: [
+          ['Nombre beneficiario', 'texto no vacío', { t: 'vacío', tone: 'bad' }],
+          ['Cuenta', 'número existente', { t: 'vacío · no numérico', tone: 'bad' }],
+          ['Monto', 'número > 0', { t: "vacío · 'abc' · ≤ 0", tone: 'bad' }],
+        ],
+      },
+    ],
+  },
+  {
+    id: 'BVA',
+    name: 'Análisis de valores límite',
+    idea: 'Cada regla tiene una frontera. Se prueban el límite exacto y su vecino inmediato, donde se concentran los defectos ("errores por uno").',
+    why: 'Las reglas de dinero se definen sobre umbrales (saldo, cero, umbral de enganche). Alternativa descartada: solo partición de equivalencia no detecta que deje pasar saldo + 0.01.',
+    cases: 'CP-09, CP-10, CP-13, CP-14, CP-18',
+    tables: [
+      {
+        title: 'Transferencia mayor al saldo (RF-09 / CP-09) — saldo S = $325.50',
+        columns: ['Valor', 'Clase', 'Esperado', 'Resultado real'],
+        rows: [
+          ['S − 0.01 = 325.49', 'válido', { t: 'pasa', tone: 'ok' }, '—'],
+          ['S = 325.50', 'válido (límite)', { t: 'pasa', tone: 'ok' }, '—'],
+          ['S + 0.01 = 325.51', 'inválido (límite)', { t: 'rechaza', tone: 'muted' }, { t: 'Permitió → −$0.01 (H-01)', tone: 'bad' }],
+        ],
+      },
+      {
+        title: 'Bill Pay mayor al saldo (RF-13 / CP-13) — saldo S = $515.51',
+        columns: ['Valor', 'Clase', 'Esperado', 'Resultado real'],
+        rows: [
+          ['S = 515.51', 'válido (límite)', { t: 'pasa', tone: 'ok' }, '—'],
+          ['S + 0.01', 'inválido (límite)', { t: 'rechaza', tone: 'muted' }, '—'],
+          ['1000.00 (≫ S, probado)', 'inválido', { t: 'rechaza', tone: 'muted' }, { t: 'Error interno + Overview roto (H-03)', tone: 'bad' }],
+        ],
+      },
+      {
+        title: 'Transferencia — monto cero o negativo (RF-10 / CP-10) — frontera en 0',
+        columns: ['Valor', 'Clase', 'Esperado'],
+        rows: [
+          ['−0.01', 'inválido', { t: 'rechaza', tone: 'muted' }],
+          ['0.00', 'inválido (límite)', { t: 'rechaza', tone: 'muted' }],
+          ['0.01', 'válido (mínimo)', { t: 'procesa', tone: 'ok' }],
+        ],
+      },
+      {
+        title: 'Préstamo — enganche (RF-19 / CP-18) — umbral U',
+        columns: ['Valor', 'Esperado'],
+        rows: [
+          ['U (límite)', { t: 'aprueba', tone: 'ok' }],
+          ['U − 0.01', { t: 'rechaza', tone: 'muted' }],
+        ],
+      },
+    ],
+  },
+  {
+    id: 'DT',
+    name: 'Tabla de decisión',
+    idea: 'Cuando el resultado depende de varias condiciones a la vez, se tabulan todas las combinaciones (reglas) y la acción de cada una.',
+    why: 'Las operaciones combinan condiciones (tipo × fondeo; origen × destino × monto × saldo). Alternativa descartada: probar entradas sueltas deja combinaciones de reglas sin cubrir.',
+    cases: 'CP-05, CP-06, CP-08, CP-11, CP-17',
+    tables: [
+      {
+        title: 'Apertura de cuenta (RF-05/RF-06 / CP-05, CP-06)',
+        columns: ['Regla', '¿Tipo seleccionado?', '¿Fondeo válido?', 'Acción'],
+        rows: [
+          ['R1', 'Sí', 'Sí', { t: 'Crea cuenta (CP-05)', tone: 'ok' }],
+          ['R2', 'Sí', 'No', { t: 'Rechaza / pide fondeo (CP-06)', tone: 'bad' }],
+          ['R3', 'No', 'Sí', { t: 'Rechaza / pide tipo (CP-06)', tone: 'bad' }],
+          ['R4', 'No', 'No', { t: 'Rechaza (CP-06)', tone: 'bad' }],
+        ],
+      },
+      {
+        title: 'Transferencia (RF-08 / CP-08)',
+        columns: ['Regla', 'monto > 0', 'saldo suficiente', 'origen ≠ destino', 'Acción'],
+        rows: [
+          ['R1', 'Sí', 'Sí', 'Sí', { t: 'Transfiere (CP-08)', tone: 'ok' }],
+          ['R2', 'Sí', 'No', 'Sí', { t: 'Rechaza (CP-09)', tone: 'bad' }],
+          ['R3', 'No', '—', '—', { t: 'Rechaza (CP-10)', tone: 'bad' }],
+          ['R4', 'Sí', 'Sí', 'No', { t: 'Rechaza — misma cuenta (CP-10)', tone: 'bad' }],
+        ],
+      },
+      {
+        title: 'Bill Pay (RF-11 / CP-11)',
+        columns: ['Regla', 'datos completos', 'monto válido', 'saldo suficiente', 'Acción'],
+        rows: [
+          ['R1', 'Sí', 'Sí', 'Sí', { t: 'Paga y descuenta (CP-11)', tone: 'ok' }],
+          ['R2', 'No', '—', '—', { t: 'Rechaza (CP-12)', tone: 'bad' }],
+          ['R3', 'Sí', 'No', '—', { t: 'Rechaza (CP-12)', tone: 'bad' }],
+          ['R4', 'Sí', 'Sí', 'No', { t: 'Rechaza (CP-13)', tone: 'bad' }],
+        ],
+      },
+    ],
+  },
+  {
+    id: 'ST',
+    name: 'Transición de estados',
+    idea: 'El sistema cambia de estado ante un evento. Se verifica cada transición y su efecto observable.',
+    why: 'Lo que se valida es un cambio de estado, no un valor de entrada. Alternativa descartada: partición o valores límite no capturan transiciones ni la persistencia.',
+    cases: 'CP-04, CP-07 (y RF-23 logout)',
+    tables: [
+      {
+        title: 'Sesión (RF-04 / CP-04 · RF-23 logout)',
+        columns: ['Estado origen', 'Evento', 'Estado destino', 'Caso'],
+        rows: [
+          ['No autenticado', 'login válido', { t: 'Autenticado', tone: 'ok' }, 'CP-04'],
+          ['No autenticado', 'login inválido', { t: 'No autenticado', tone: 'muted' }, 'CP-03'],
+          ['Autenticado', 'logout', { t: 'No autenticado', tone: 'muted' }, 'RF-23'],
+          ['No autenticado', 'acceso a función protegida', { t: 'Bloqueado / pide login', tone: 'bad' }, '—'],
+        ],
+      },
+      {
+        title: 'Cuenta (RF-07 / CP-07)',
+        columns: ['Estado origen', 'Evento', 'Estado destino', 'Caso'],
+        rows: [
+          ['Cuenta inexistente', 'apertura exitosa', { t: 'Cuenta creada y visible', tone: 'ok' }, 'CP-05 / CP-07'],
+          ['Cuenta creada', 'volver al Accounts Overview', { t: 'Persistente', tone: 'ok' }, 'CP-07'],
+        ],
+      },
+    ],
+  },
 ]
