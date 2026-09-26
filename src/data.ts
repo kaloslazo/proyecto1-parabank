@@ -370,4 +370,31 @@ export const designTechniques: DesignTechnique[] = [
       },
     ],
   },
+  {
+    id: 'ST',
+    name: 'Transición de estados',
+    idea: 'El sistema cambia de estado ante un evento. Se verifica cada transición y su efecto observable.',
+    why: 'Lo que se valida es un cambio de estado, no un valor de entrada. Alternativa descartada: partición o valores límite no capturan transiciones ni la persistencia.',
+    cases: 'CP-04, CP-07',
+    tables: [
+      {
+        title: 'Sesión (RF-04 / CP-04 · RF-23 logout)',
+        columns: ['Estado origen', 'Evento', 'Estado destino', 'Caso'],
+        rows: [
+          ['No autenticado', 'login válido', { t: 'Autenticado', tone: 'ok' }, 'CP-04'],
+          ['No autenticado', 'login inválido', { t: 'No autenticado', tone: 'muted' }, 'CP-03'],
+          ['Autenticado', 'logout', { t: 'No autenticado', tone: 'muted' }, 'RF-23'],
+          ['No autenticado', 'acceso a función protegida', { t: 'Bloqueado / pide login', tone: 'bad' }, '—'],
+        ],
+      },
+      {
+        title: 'Cuenta (RF-07 / CP-07)',
+        columns: ['Estado origen', 'Evento', 'Estado destino', 'Caso'],
+        rows: [
+          ['Cuenta inexistente', 'apertura exitosa', { t: 'Cuenta creada y visible', tone: 'ok' }, 'CP-05 / CP-07'],
+          ['Cuenta creada', 'volver al Accounts Overview', { t: 'Persistente', tone: 'ok' }, 'CP-07'],
+        ],
+      },
+    ],
+  },
 ]
