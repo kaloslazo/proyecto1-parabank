@@ -14,12 +14,18 @@ import json
 from pathlib import Path
 
 import openpyxl
+from openpyxl.drawing.image import Image as XLImage
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from openpyxl.utils import get_column_letter
 
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = Path("/Users/gianpier/Downloads/Plantilla_Matriz_Casos_de_Prueba-1.xlsx")
 OUTPUT = ROOT / "output" / "matriz" / "Proyecto1_Caso1_Matriz_Casos_de_Prueba.xlsx"
 RESULTS = ROOT / "output" / "matriz" / "execution_results.json"
+EVIDENCE_DIR = ROOT / "output" / "evidencia"
+
+# Miniatura de evidencia incrustada (px). Los 2:1 de ParaBank -> 380x190.
+THUMB_W, THUMB_H = 380, 190
 
 HEADER_FILL = PatternFill("solid", fgColor="1F4E78")
 WHITE_FILL = PatternFill("solid", fgColor="FFFFFF")
@@ -163,6 +169,21 @@ def write_row(ws, r, values, fill):
         cell.border = BORDER
 
 
+def embed_evidence(ws, row, col, filename):
+    """Incrusta la primera captura de `filename` (puede traer varias separadas
+    por ';') anclada a la celda (row, col). Devuelve True si incrustó algo."""
+    if not filename:
+        return False
+    first = filename.split(";")[0].strip()
+    path = EVIDENCE_DIR / first
+    if not path.exists():
+        return False
+    img = XLImage(str(path))
+    img.width, img.height = THUMB_W, THUMB_H
+    ws.add_image(img, f"{get_column_letter(col)}{row}")
+    return True
+
+
 def build_cases_sheet(ws):
     style_header(ws, 9)
     clear_rows(ws)
@@ -181,17 +202,25 @@ def build_execution_sheet(ws, results):
         cid = case[0]
         expected = case[8]
         res = results.get(cid, {})
+        evidence_name = res.get("evidence", "")
+        r = i + 2
+        # La columna Evidencia (E) llevará la imagen incrustada; si no hay
+        # imagen disponible, se deja el nombre del archivo como texto.
+        has_img = (EVIDENCE_DIR / evidence_name.split(";")[0].strip()).exists() if evidence_name else False
         row = [
             cid,
             expected,
             res.get("obtained", "Pendiente de ejecución en ParaBank."),
             res.get("verdict", "Pendiente"),
-            res.get("evidence", ""),
+            "" if has_img else evidence_name,
             res.get("notes", ""),
         ]
-        r = i + 2
         write_row(ws, r, row, WHITE_FILL if i % 2 == 0 else ZEBRA_FILL)
-        ws.row_dimensions[r].height = 56
+        if embed_evidence(ws, r, 5, evidence_name):
+            ws.row_dimensions[r].height = 150
+        else:
+            ws.row_dimensions[r].height = 56
+    ws.column_dimensions["E"].width = 56
     ws.freeze_panes = "A2"
 
 
@@ -212,10 +241,17 @@ def build_findings_sheet(ws, findings):
         return
     for i, f in enumerate(findings):
         r = i + 2
-        row = [f.get(k, "") for k in
-               ("id", "title", "summary", "steps", "expected", "obtained", "severity", "evidence")]
-        write_row(ws, r, row, WHITE_FILL if i % 2 == 0 else ZEBRA_FILL)
-        ws.row_dimensions[r].height = 70
+        evidence_name = f.get("evidence", "")
+        has_img = (EVIDENCE_DIR / evidence_name.split(";")[0].strip()).exists() if evidence_name else False
+        values = [f.get(k, "") for k in
+                  ("id", "title", "summary", "steps", "expected", "obtained", "severity")]
+        values.append("" if has_img else evidence_name)
+        write_row(ws, r, values, WHITE_FILL if i % 2 == 0 else ZEBRA_FILL)
+        if embed_evidence(ws, r, 8, evidence_name):
+            ws.row_dimensions[r].height = 150
+        else:
+            ws.row_dimensions[r].height = 70
+    ws.column_dimensions["H"].width = 56
     ws.freeze_panes = "A2"
 
 

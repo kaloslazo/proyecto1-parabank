@@ -1281,3 +1281,8 @@ textarea { color: var(--ink); background: var(--surface-muted); border-color: va
     transition-duration: .01ms !important;
   }
 }
+
+/* Evidencia (capturas reales de la ejecución en ParaBank) */
+.evidence-link { display: block; margin-top: 6px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line, #d9d9de); }
+.evidence-thumb { display: block; width: 100%; height: auto; max-height: 220px; object-fit: cover; object-position: top; transition: transform .25s ease; }
+.evidence-link:hover .evidence-thumb { transform: scale(1.02); }
