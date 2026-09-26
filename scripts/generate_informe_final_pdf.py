@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -34,6 +35,28 @@ _matriz = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_matriz)
 CASES = _matriz.CASES
 HIGH_CASES = _matriz.HIGH_CASES
+
+DATA_TS = ROOT / "src" / "data.ts"
+
+
+def load_techniques() -> list[dict]:
+    """Carga designTechniques desde data.ts (fuente única con el dashboard)."""
+    node_program = r"""
+const fs = require('fs');
+const ts = require('typescript');
+const source = fs.readFileSync(process.argv[1], 'utf8');
+const js = ts.transpileModule(source, {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 }
+}).outputText;
+const exported = {};
+new Function('exports', 'module', js)(exported, { exports: exported });
+process.stdout.write(JSON.stringify(exported.designTechniques));
+"""
+    result = subprocess.run(
+        ["node", "-e", node_program, str(DATA_TS)],
+        cwd=ROOT, check=True, capture_output=True, text=True,
+    )
+    return json.loads(result.stdout)
 
 INK = colors.HexColor("#1D1D1F")
 INK_SOFT = colors.HexColor("#3A3A3C")
@@ -60,7 +83,13 @@ styles.add(ParagraphStyle(name="MV", parent=styles["BodyText"], fontName="Helvet
 
 
 def esc(v: str) -> str:
-    return str(v).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    s = str(v)
+    # La Helvetica del PDF no dibuja estos símbolos: se reemplazan por ASCII.
+    for a, b in (("−", "-"), ("≤", "<="), ("≥", ">="),
+                 ("≫", ">>"), ("≪", "<<"), ("≠", "!="),
+                 ("→", "->"), ("≈", "~")):
+        s = s.replace(a, b)
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 def P(v, s="Body"):
@@ -155,6 +184,40 @@ TECHNIQUE_JUSTIFY = [
     ("Transición de estados", "CP-04, CP-07",
      "La sesión y las cuentas cambian de estado (no autenticado -> autenticado; cuenta inexistente -> creada y persistente); se verifica que cada transición y su efecto observable ocurran correctamente."),
 ]
+
+
+def tech_cell(cell) -> Paragraph:
+    """Renderiza una celda de técnica (texto plano o {t, tone})."""
+    if isinstance(cell, dict):
+        tone = cell.get("tone", "")
+        color = {"ok": GOOD, "bad": BAD, "muted": MUTED, "strong": INK}.get(tone, INK_SOFT)
+        bold = tone in ("ok", "bad", "strong")
+        st = ParagraphStyle(f"tcell_{tone}", parent=styles["TC"], textColor=color,
+                            fontName="Helvetica-Bold" if bold else "Helvetica")
+        return Paragraph(esc(cell.get("t", "")), st)
+    return P(cell, "TC")
+
+
+def build_annex(S: list) -> None:
+    techniques = load_techniques()
+    usable = 167 * mm
+    S.append(PageBreak())
+    S.append(P("Anexo: derivación de las técnicas de diseño de caja negra", "H1"))
+    S.append(P("La técnica se elige por la naturaleza del requisito. Se muestran las clases, valores límite, reglas de decisión y estados concretos que sustentan los casos de prueba; las mismas tablas están disponibles en la vista Técnicas del panel web.", "Body"))
+    for tech in techniques:
+        S.append(P(f"{tech['id']} - {tech['name']}", "H2"))
+        S.append(P(tech["idea"], "Body"))
+        S.append(Paragraph(f"<b>Por qué esta y no otra:</b> {esc(tech['why'])}", styles["Body"]))
+        S.append(Paragraph(f"<b>Casos donde se aplicó:</b> {esc(tech['cases'])}", styles["Body"]))
+        for tbl in tech["tables"]:
+            S.append(Paragraph(f"<b>{esc(tbl['title'])}</b>", styles["Body"]))
+            cols = tbl["columns"]
+            widths = [usable / len(cols)] * len(cols)
+            rows = [[P(c, "TH") for c in cols]]
+            for row in tbl["rows"]:
+                rows.append([tech_cell(cell) for cell in row])
+            S.append(table(rows, widths))
+            S.append(Spacer(1, 3 * mm))
 
 
 def build():
@@ -272,6 +335,9 @@ def build():
         S.append(table(frows, [15 * mm, 40 * mm, 72 * mm, 15 * mm, 25 * mm]))
     else:
         S.append(P("Los hallazgos (defectos, comportamientos inesperados o validaciones ausentes) se registrarán durante la ejecución, cada uno con ID, título, resumen, pasos para reproducir, esperado vs. obtenido, severidad y evidencia.", "Body"))
+
+    # ---- Anexo: derivación de las técnicas de diseño ----
+    build_annex(S)
 
     doc.build(S, onFirstPage=_footer, onLaterPages=_footer)
     print(json.dumps({"output": str(OUTPUT), "cases": len(CASES),
