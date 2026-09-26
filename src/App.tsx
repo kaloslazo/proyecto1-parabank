@@ -213,49 +213,16 @@ function TechCellText({ cell }: { cell: TechniqueCell }) {
   return <span className={`tech-cell tone-${cell.tone}`}>{cell.t}</span>
 }
 
-function SessionStateDiagram() {
-  return <div className="state-diagram">
-    <span className="micro-label">Diagrama de estados — sesión (RF-04 / CP-04 · RF-23)</span>
-    <div className="state-diagram-scroll">
-      <svg viewBox="0 0 660 250" className="state-svg" role="img" aria-label="Diagrama de estados de la sesión: no autenticado y autenticado con sus transiciones">
-        <defs>
-          <marker id="stArrow" markerWidth="9" markerHeight="9" refX="7.5" refY="4" orient="auto"><path d="M0 0 L9 4 L0 8 z" fill="var(--ink)" /></marker>
-        </defs>
-        {/* estado inicial */}
-        <circle cx="34" cy="132" r="7" fill="var(--ink)" />
-        <path d="M41 132 H70" fill="none" stroke="var(--ink)" strokeWidth="2" markerEnd="url(#stArrow)" />
-        {/* nodos */}
-        <rect x="72" y="102" width="200" height="60" rx="14" fill="var(--surface-muted)" stroke="var(--line-strong)" strokeWidth="1.5" />
-        <text x="172" y="137" textAnchor="middle" className="state-node-label">No autenticado</text>
-        <rect x="404" y="102" width="200" height="60" rx="14" fill="var(--surface-muted)" stroke="var(--line-strong)" strokeWidth="1.5" />
-        <text x="504" y="137" textAnchor="middle" className="state-node-label">Autenticado</text>
-        {/* transición login válido (arriba) */}
-        <path d="M272 120 C 320 96, 356 96, 404 120" fill="none" stroke="var(--ink)" strokeWidth="2" markerEnd="url(#stArrow)" />
-        <text x="338" y="88" textAnchor="middle" className="state-edge-label">login válido · CP-04</text>
-        {/* transición logout (abajo) */}
-        <path d="M404 150 C 356 176, 320 176, 272 150" fill="none" stroke="var(--ink)" strokeWidth="2" markerEnd="url(#stArrow)" />
-        <text x="338" y="192" textAnchor="middle" className="state-edge-label">logout · RF-23</text>
-        {/* self-loop: login inválido */}
-        <path d="M140 102 C 120 66, 224 66, 204 102" fill="none" stroke="var(--muted)" strokeWidth="2" markerEnd="url(#stArrow)" />
-        <text x="172" y="52" textAnchor="middle" className="state-edge-label">login inválido · CP-03 (sigue no autenticado)</text>
-        {/* nota función protegida */}
-        <text x="172" y="200" textAnchor="middle" className="state-note">acceso a función protegida → pide login</text>
-      </svg>
-    </div>
-  </div>
-}
-
 function Techniques() {
   return <><PageIntro eyebrow="03 · Diseño" title="Técnicas de diseño de caja negra" description="La derivación detrás de cada caso: las clases, valores límite, reglas de decisión y estados que sustentan las pruebas. La técnica se elige por la naturaleza del requisito, no por gusto." action={<Badge tone="plum">{designTechniques.length} técnicas</Badge>} />
-    <section className="rules-section"><div className="rules-head"><div><span className="micro-label">Reglas de negocio verificadas</span><h2>Las reglas que rigen cada operación</h2><p>Cada regla resume la condición de negocio que las pruebas comprueban, con los requisitos funcionales relacionados.</p></div><Badge tone="mint">{businessRules.length} reglas</Badge></div>
-      <div className="rules-table-scroll"><table className="rules-table"><thead><tr><th>ID</th><th>Área</th><th>Regla de negocio</th><th>RF</th></tr></thead>
-      <tbody>{businessRules.map((rn) => <tr key={rn.id}><td className="rules-td-id">{rn.id}</td><td className="rules-td-area">{rn.area}</td><td>{rn.rule}</td><td className="rules-td-rf">{rn.relatedRf}</td></tr>)}</tbody></table></div>
+    <section className="rules-section"><div className="rules-head"><div><span className="micro-label">Reglas de negocio verificadas</span><h2>Cada regla, con el caso que la evalúa y su técnica</h2><p>La condición de negocio que se comprueba, el caso de prueba que la evalúa y la técnica de caja negra usada.</p></div><Badge tone="mint">{businessRules.length} reglas</Badge></div>
+      <div className="rules-table-scroll"><table className="rules-table"><thead><tr><th>ID</th><th>Área</th><th>Regla de negocio</th><th>Caso(s)</th><th>Técnica</th></tr></thead>
+      <tbody>{businessRules.map((rn) => <tr key={rn.id}><td className="rules-td-id">{rn.id}</td><td className="rules-td-area">{rn.area}</td><td>{rn.rule}</td><td className="rules-td-rf">{rn.cases}</td><td className="rules-td-area">{rn.technique}</td></tr>)}</tbody></table></div>
     </section>
     <div className="tech-legend"><span className="micro-label">Cómo leer las tablas</span><div className="tech-legend-keys"><span className="tech-cell tone-ok">válido / pasa</span><span className="tech-cell tone-bad">inválido / defecto</span><span className="tech-cell tone-muted">rechazo esperado</span></div></div>
     <div className="tech-stack">{designTechniques.map((tech) => <section className="tech-block" key={tech.id}>
       <div className="tech-block-head"><div className="tech-badge">{tech.id}</div><div><h2>{tech.name}</h2><p className="tech-idea">{tech.idea}</p></div></div>
       <div className="tech-why"><div className="tech-why-item"><span className="micro-label">Por qué esta y no otra</span><p>{tech.why}</p></div><div className="tech-why-item"><span className="micro-label">Casos donde se aplicó</span><p>{tech.cases}</p></div></div>
-      {tech.id === 'ST' && <SessionStateDiagram />}
       <div className="tech-tables">{tech.tables.map((table) => <div className="tech-table-wrap" key={table.title}>
         <h3 className="tech-table-title">{table.title}</h3>
         <div className="tech-table-scroll"><table className="tech-table"><thead><tr>{table.columns.map((col) => <th key={col}>{col}</th>)}</tr></thead>

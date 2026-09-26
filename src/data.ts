@@ -245,24 +245,25 @@ export const testRun = {
   accounts: '28662 (Checking) · 28773 (Savings)',
 }
 
-// Reglas de negocio verificadas (lo que la profesora puede pedir).
+// Reglas de negocio verificadas, cada una junto al caso que la evalúa y su
+// técnica. Se incluyen solo las reglas que tienen un caso de prueba asociado.
 export type BusinessRule = {
   id: string
   area: string
   rule: string
+  cases: string
+  technique: string
   relatedRf: string
 }
 
 export const businessRules: BusinessRule[] = [
-  { id: 'RN-01', area: 'Registro', rule: 'El nombre de usuario debe ser único: no se permiten dos cuentas con el mismo usuario, y todos los campos obligatorios deben estar completos.', relatedRf: 'RF-01, RF-02' },
-  { id: 'RN-02', area: 'Acceso', rule: 'Solo se inicia sesión con credenciales válidas de un cliente registrado; cualquier credencial inválida se rechaza.', relatedRf: 'RF-03, RF-04' },
-  { id: 'RN-03', area: 'Apertura de cuenta', rule: 'Una cuenta se abre únicamente si se elige el tipo (Checking o Savings) y una cuenta de fondeo válida; se fondea con el saldo mínimo configurado, debitado del fondeo.', relatedRf: 'RF-05, RF-06, RF-25' },
-  { id: 'RN-04', area: 'Transferencia', rule: 'Se permite solo si el monto es mayor que cero, hay saldo suficiente en el origen y el origen es distinto del destino; debita el origen y acredita el destino por el mismo monto.', relatedRf: 'RF-08, RF-09, RF-10' },
-  { id: 'RN-05', area: 'Pago de servicios (Bill Pay)', rule: 'Se procesa solo con datos del beneficiario completos, cuenta válida (coincidente con su confirmación) y monto dentro del saldo; el monto se descuenta de la cuenta elegida.', relatedRf: 'RF-11, RF-12, RF-13, RF-29' },
-  { id: 'RN-06', area: 'Préstamo', rule: 'Se aprueba solo si el enganche cumple el umbral configurado; un préstamo aprobado crea la cuenta de préstamo y acredita los fondos.', relatedRf: 'RF-18, RF-19, RF-34' },
-  { id: 'RN-07', area: 'Trazabilidad', rule: 'Toda operación monetaria (transferencia, pago o préstamo) queda registrada y es consultable en el historial de la cuenta.', relatedRf: 'RF-14, RF-15, RF-27' },
-  { id: 'RN-08', area: 'Sesión', rule: 'La sesión inicia autenticada, se cierra con Log Out y las funciones protegidas exigen autenticación vigente.', relatedRf: 'RF-04, RF-23' },
-  { id: 'RN-09', area: 'Administración', rule: 'Los parámetros del banco (saldo inicial, saldo mínimo, umbral y proveedor/procesador de préstamos) se configuran desde el panel de administración.', relatedRf: 'RF-20, RF-21, RF-22, RF-36' },
+  { id: 'RN-01', area: 'Registro', rule: 'El nombre de usuario debe ser único y todos los campos obligatorios deben estar completos: no se permiten dos cuentas con el mismo usuario.', cases: 'CP-01, CP-02', technique: 'Partición de equivalencia', relatedRf: 'RF-01, RF-02' },
+  { id: 'RN-02', area: 'Acceso', rule: 'Solo se inicia sesión con credenciales válidas de un cliente registrado; cualquier credencial inválida se rechaza.', cases: 'CP-03, CP-04', technique: 'Partición de equivalencia', relatedRf: 'RF-03, RF-04' },
+  { id: 'RN-03', area: 'Apertura de cuenta', rule: 'Una cuenta se abre únicamente si se elige el tipo (Checking o Savings) y una cuenta de fondeo válida.', cases: 'CP-05, CP-06', technique: 'Tabla de decisión', relatedRf: 'RF-05, RF-06' },
+  { id: 'RN-04', area: 'Transferencia', rule: 'Se permite solo si el monto es mayor que cero, hay saldo suficiente en el origen y el origen es distinto del destino; debita el origen y acredita el destino por el mismo monto.', cases: 'CP-08, CP-09, CP-10', technique: 'Tabla de decisión · Valores límite', relatedRf: 'RF-08, RF-09, RF-10' },
+  { id: 'RN-05', area: 'Pago de servicios (Bill Pay)', rule: 'Se procesa solo con datos del beneficiario completos, cuenta válida y monto dentro del saldo; el monto se descuenta de la cuenta elegida.', cases: 'CP-11, CP-12, CP-13', technique: 'Tabla de decisión · Valores límite · Partición', relatedRf: 'RF-11, RF-12, RF-13' },
+  { id: 'RN-06', area: 'Préstamo', rule: 'Se aprueba solo si el enganche cumple el umbral configurado; el rechazo se produce cuando el enganche es insuficiente.', cases: 'CP-17, CP-18', technique: 'Tabla de decisión · Valores límite', relatedRf: 'RF-18, RF-19' },
+  { id: 'RN-07', area: 'Trazabilidad', rule: 'Toda operación monetaria queda registrada y es localizable en el historial por fecha, rango, monto o ID.', cases: 'CP-14, CP-15', technique: 'Valores límite · Partición', relatedRf: 'RF-14, RF-15' },
 ]
 
 // Derivación de las técnicas de diseño de caja negra: las clases/valores
@@ -365,33 +366,6 @@ export const designTechniques: DesignTechnique[] = [
           ['R2', 'Sí', 'No', 'Sí', { t: 'Rechaza (CP-09)', tone: 'bad' }],
           ['R3', 'No', '—', '—', { t: 'Rechaza (CP-10)', tone: 'bad' }],
           ['R4', 'Sí', 'Sí', 'No', { t: 'Rechaza — misma cuenta (CP-10)', tone: 'bad' }],
-        ],
-      },
-    ],
-  },
-  {
-    id: 'ST',
-    name: 'Transición de estados',
-    idea: 'El sistema cambia de estado ante un evento. Se verifica cada transición y su efecto observable.',
-    why: 'Lo que se valida es un cambio de estado, no un valor de entrada. Alternativa descartada: partición o valores límite no capturan transiciones ni la persistencia.',
-    cases: 'CP-04, CP-07 (y RF-23 logout)',
-    tables: [
-      {
-        title: 'Sesión (RF-04 / CP-04 · RF-23 logout)',
-        columns: ['Estado origen', 'Evento', 'Estado destino', 'Caso'],
-        rows: [
-          ['No autenticado', 'login válido', { t: 'Autenticado', tone: 'ok' }, 'CP-04'],
-          ['No autenticado', 'login inválido', { t: 'No autenticado', tone: 'muted' }, 'CP-03'],
-          ['Autenticado', 'logout', { t: 'No autenticado', tone: 'muted' }, 'RF-23'],
-          ['No autenticado', 'acceso a función protegida', { t: 'Bloqueado / pide login', tone: 'bad' }, '—'],
-        ],
-      },
-      {
-        title: 'Cuenta (RF-07 / CP-07)',
-        columns: ['Estado origen', 'Evento', 'Estado destino', 'Caso'],
-        rows: [
-          ['Cuenta inexistente', 'apertura exitosa', { t: 'Cuenta creada y visible', tone: 'ok' }, 'CP-05 / CP-07'],
-          ['Cuenta creada', 'volver al Accounts Overview', { t: 'Persistente', tone: 'ok' }, 'CP-07'],
         ],
       },
     ],

@@ -225,11 +225,11 @@ def build_annex(S: list) -> None:
     rules = load_business_rules()
     S.append(PageBreak())
     S.append(P("Anexo A: reglas de negocio verificadas", "H1"))
-    S.append(P("Cada regla resume la condición de negocio que las pruebas comprueban sobre el sistema real, con los requisitos funcionales relacionados.", "Body"))
-    rrows = [[P("ID", "TH"), P("Área", "TH"), P("Regla de negocio", "TH"), P("RF", "TH")]]
+    S.append(P("Cada regla de negocio se presenta junto al caso de prueba que la evalúa y la técnica de caja negra utilizada.", "Body"))
+    rrows = [[P("ID", "TH"), P("Área", "TH"), P("Regla de negocio", "TH"), P("Caso(s)", "TH"), P("Técnica", "TH")]]
     for rn in rules:
-        rrows.append([P(rn["id"], "TCS"), P(rn["area"], "TCS"), P(rn["rule"], "TC"), P(rn["relatedRf"], "TC")])
-    S.append(table(rrows, [16 * mm, 30 * mm, 99 * mm, 22 * mm]))
+        rrows.append([P(rn["id"], "TCS"), P(rn["area"], "TCS"), P(rn["rule"], "TC"), P(rn["cases"], "TC"), P(rn["technique"], "TC")])
+    S.append(table(rrows, [15 * mm, 26 * mm, 67 * mm, 24 * mm, 35 * mm]))
 
     # ---- Anexo B: derivación de las técnicas ----
     techniques = load_techniques()
