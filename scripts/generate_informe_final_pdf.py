@@ -3,7 +3,7 @@
 Un solo informe con secciones diferenciadas, alineado a la Guía de Entrega:
   1. Planificación de pruebas (resumen + estrategia justificada + niveles)
   2. Análisis de pruebas (priorización de los 36 RF por riesgo)
-  3. Diseño de pruebas (18 casos + justificación de técnicas)
+  3. Diseño de pruebas (62 casos + justificación de técnicas)
   4. Ejecución de casos críticos y hallazgos (desde execution_results.json)
 
 Los casos se leen de generate_matriz_excel.CASES para mantener una sola fuente
@@ -325,7 +325,7 @@ def build():
     # ---- 3. Diseño de pruebas ----
     S.append(P("3. Diseño de pruebas", "H1"))
     n_alta_rf = sum(1 for r in RF_PRIORITY if r[3] == "Alta")
-    S.append(P(f"Se derivan {len(CASES)} casos de prueba de los RF priorizados, cubriendo 6 funcionalidades. De los {n_alta_rf} RF de riesgo alto del catálogo, {len(HIGH_CASES)} corresponden a los flujos monetarios y de acceso seleccionados como núcleo crítico y son los que se ejecutan sobre el sistema real (sección 4); el resto de RF de alto riesgo queda diseñado como requisito verificable para una iteración posterior. Cada caso indica su RF, prioridad, técnica de diseño, precondiciones, pasos, datos y resultado esperado (detalle completo en la matriz Excel).", "Body"))
+    S.append(P(f"Se derivan {len(CASES)} casos de prueba de los RF priorizados, cubriendo las 8 funcionalidades del alcance. De los {n_alta_rf} RF de riesgo alto del catálogo, {len(HIGH_CASES)} corresponden a los flujos monetarios y de acceso seleccionados como núcleo crítico y son los que se ejecutan sobre el sistema real (sección 4); el resto de RF de alto riesgo queda diseñado como requisito verificable para una iteración posterior. Cada caso indica su RF, prioridad, técnica de diseño, precondiciones, pasos, datos y resultado esperado (detalle completo en la matriz Excel).", "Body"))
     S.append(P("Técnicas de diseño aplicadas (caja negra) y su justificación", "H2"))
     trows = [[P("Técnica", "TH"), P("Casos", "TH"), P("Por qué se aplica", "TH")]]
     trows += [[P(a, "TCS"), P(b, "TC"), P(c, "TC")] for a, b, c in TECHNIQUE_JUSTIFY]
