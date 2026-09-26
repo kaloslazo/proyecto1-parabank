@@ -139,6 +139,7 @@ function App() {
           {activeNav === 'overview' && <Overview onNavigate={navigateTo} />}
           {activeNav === 'plan' && <Functionalities />}
           {activeNav === 'traceability' && <ClientRequirements />}
+          {activeNav === 'module' && <ModuleFocus cases={cases} />}
           {activeNav === 'cases' && <Cases cases={filteredCases} filter={caseFilter} setFilter={setCaseFilter} selectedCase={selectedCase} setSelectedCase={setSelectedCase} />}
           {activeNav === 'techniques' && <Techniques />}
           {activeNav === 'execution' && <Execution cases={highCases} updateStatus={updateStatus} toggleEvidence={toggleEvidence} />}
@@ -206,6 +207,34 @@ function CaseDetail({ item, close }: { item: TestCase; close: () => void }) {
 }
 
 function DetailBlock({ label, value }: { label: string; value: string }) { return <div className="detail-block"><span className="micro-label">{label}</span><p>{value}</p></div> }
+
+function ModuleFocus({ cases }: { cases: TestCase[] }) {
+  const [active, setActive] = useState('F-03')
+  const mod = clientFunctionalities.find((f) => f.id === active) ?? clientFunctionalities[0]
+  const rfs = clientRequirements.filter((r) => r.functionalityId === mod.id)
+  const rfIds = new Set(rfs.map((r) => r.id))
+  const cps = cases.filter((c) => rfIds.has(c.requirement))
+  const rules = businessRules.filter((rn) => rn.relatedRf.split(',').some((x) => rfIds.has(x.trim())))
+  return <>
+    <PageIntro eyebrow="Enfoque de exposición" title="Módulo en detalle" description="Elige un módulo para exponerlo: se muestran su descripción, los requisitos funcionales que le pertenecen y los casos de prueba enlazados." action={<Badge tone="plum">{mod.id}</Badge>} />
+    <div className="case-toolbar"><div className="filter-label"><Icon name="filter" size={16} /><span>Módulo a exponer</span></div><div className="filter-scroll">{clientFunctionalities.map((f) => <button key={f.id} className={active === f.id ? 'filter-pill selected' : 'filter-pill'} onClick={() => setActive(f.id)}>{f.id} · {f.name}</button>)}</div></div>
+    <section className="focus-head">
+      <div className="focus-head-main"><span className="functionality-id">{mod.id}</span><h2>{mod.name}</h2><p><strong>Dónde se usa:</strong> {mod.location}</p><p><strong>Actor:</strong> {mod.actor}</p></div>
+      <div className="focus-metrics"><div><strong>{rfs.length}</strong><span>requisitos</span></div><div><strong>{cps.length}</strong><span>casos</span></div><div><strong>{cps.filter((c) => c.status !== 'Pendiente').length}</strong><span>ejecutados</span></div></div>
+    </section>
+    {rules.length > 0 && <div className="focus-rule"><span className="micro-label">Regla de negocio verificada</span>{rules.map((rn) => <p key={rn.id}><strong>{rn.id}.</strong> {rn.rule} <em>({rn.technique})</em></p>)}</div>}
+    <h3 className="focus-subtitle">Requisitos del módulo <span>{rfs.length}</span></h3>
+    <div className="rules-table-scroll"><table className="rules-table"><thead><tr><th>RF</th><th>Requisito verificable</th><th>Datos y reglas</th><th>Prioridad</th></tr></thead>
+    <tbody>{rfs.map((r) => <tr key={r.id}><td className="rules-td-id">{r.id}</td><td>{r.requirement}</td><td>{r.dataRules}</td><td className="rules-td-area">{r.priority}</td></tr>)}</tbody></table></div>
+    <h3 className="focus-subtitle">Casos de prueba enlazados <span>{cps.length}</span></h3>
+    {cps.length === 0 ? <p className="focus-empty">Este módulo no tiene casos de prueba diseñados (queda fuera del alcance de ejecución).</p> :
+    <div className="mgmt-suite"><div className="mgmt-rows">{cps.map((c) => <div className="mgmt-row" key={c.id}>
+      <span className="case-id">{c.id}</span>
+      <div className="mgmt-row-main"><strong>{c.condition}</strong><small>{c.requirement} · {c.technique} · Esperado: {c.expected}</small></div>
+      <Badge tone={statusClass[c.status]}>{c.status}</Badge>
+    </div>)}</div></div>}
+  </>
+}
 
 function TechCellText({ cell }: { cell: TechniqueCell }) {
   if (typeof cell === 'string') return <>{cell}</>

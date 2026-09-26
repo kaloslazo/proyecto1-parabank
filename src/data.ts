@@ -1,6 +1,6 @@
 export type Priority = 'Alta' | 'Media' | 'Baja'
 export type TestStatus = 'Pendiente' | 'Pasó' | 'Falló' | 'Bloqueado'
-export type NavKey = 'overview' | 'plan' | 'traceability' | 'cases' | 'techniques' | 'execution' | 'findings'
+export type NavKey = 'overview' | 'plan' | 'traceability' | 'module' | 'cases' | 'techniques' | 'execution' | 'findings'
 
 export type Requirement = {
   id: string
@@ -228,6 +228,7 @@ export const navItems: { key: NavKey; label: string; icon: string }[] = [
   { key: 'overview', label: 'Resumen', icon: 'grid' },
   { key: 'plan', label: 'Funciones', icon: 'clipboard' },
   { key: 'traceability', label: 'Requisitos', icon: 'route' },
+  { key: 'module', label: 'Módulo', icon: 'shield' },
   { key: 'cases', label: 'Casos', icon: 'check' },
   { key: 'techniques', label: 'Técnicas', icon: 'spark' },
   { key: 'execution', label: 'Ejecución', icon: 'play' },
