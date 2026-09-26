@@ -259,7 +259,7 @@ export const designTechniques: DesignTechnique[] = [
     name: 'Partición de equivalencia',
     idea: 'Cada entrada se divide en clases que se comportan igual: válidas (CV) e inválidas (CI). Se prueba un representante por clase.',
     why: 'Los campos tienen clases equivalentes; probar un valor por clase cubre lo mismo que probar cientos. Alternativa descartada: probar todos los valores posibles es inviable.',
-    cases: 'CP-01, CP-02, CP-03, CP-12, CP-15, CP-16',
+    cases: 'CP-01, CP-02, CP-03, CP-15, CP-16',
     tables: [
       {
         title: 'Login — usuario y contraseña (RF-03 / CP-03)',
@@ -280,23 +280,14 @@ export const designTechniques: DesignTechnique[] = [
           ['CI2', 'campo obligatorio vacío', { t: 'Rechazo', tone: 'bad' }],
         ],
       },
-      {
-        title: 'Bill Pay — validación por campo (RF-12 / CP-12)',
-        columns: ['Campo', 'Clase válida', 'Clases inválidas'],
-        rows: [
-          ['Nombre beneficiario', 'texto no vacío', { t: 'vacío', tone: 'bad' }],
-          ['Cuenta', 'número existente', { t: 'vacío · no numérico', tone: 'bad' }],
-          ['Monto', 'número > 0', { t: "vacío · 'abc' · ≤ 0", tone: 'bad' }],
-        ],
-      },
     ],
   },
   {
     id: 'BVA',
     name: 'Análisis de valores límite',
     idea: 'Cada regla tiene una frontera. Se prueban el límite exacto y su vecino inmediato, donde se concentran los defectos ("errores por uno").',
-    why: 'Las reglas de dinero se definen sobre umbrales (saldo, cero, umbral de enganche). Alternativa descartada: solo partición de equivalencia no detecta que deje pasar saldo + 0.01.',
-    cases: 'CP-09, CP-10, CP-13, CP-14, CP-18',
+    why: 'Las reglas de dinero se definen sobre umbrales (saldo, cero). Alternativa descartada: solo partición de equivalencia no detecta que deje pasar saldo + 0.01.',
+    cases: 'CP-09, CP-10, CP-14',
     tables: [
       {
         title: 'Transferencia mayor al saldo (RF-09 / CP-09) — saldo S = $325.50',
@@ -308,29 +299,12 @@ export const designTechniques: DesignTechnique[] = [
         ],
       },
       {
-        title: 'Bill Pay mayor al saldo (RF-13 / CP-13) — saldo S = $515.51',
-        columns: ['Valor', 'Clase', 'Esperado', 'Resultado real'],
-        rows: [
-          ['S = 515.51', 'válido (límite)', { t: 'pasa', tone: 'ok' }, '—'],
-          ['S + 0.01', 'inválido (límite)', { t: 'rechaza', tone: 'muted' }, '—'],
-          ['1000.00 (≫ S, probado)', 'inválido', { t: 'rechaza', tone: 'muted' }, { t: 'Error interno + Overview roto (H-03)', tone: 'bad' }],
-        ],
-      },
-      {
         title: 'Transferencia — monto cero o negativo (RF-10 / CP-10) — frontera en 0',
         columns: ['Valor', 'Clase', 'Esperado'],
         rows: [
           ['−0.01', 'inválido', { t: 'rechaza', tone: 'muted' }],
           ['0.00', 'inválido (límite)', { t: 'rechaza', tone: 'muted' }],
           ['0.01', 'válido (mínimo)', { t: 'procesa', tone: 'ok' }],
-        ],
-      },
-      {
-        title: 'Préstamo — enganche (RF-19 / CP-18) — umbral U',
-        columns: ['Valor', 'Esperado'],
-        rows: [
-          ['U (límite)', { t: 'aprueba', tone: 'ok' }],
-          ['U − 0.01', { t: 'rechaza', tone: 'muted' }],
         ],
       },
     ],
@@ -340,7 +314,7 @@ export const designTechniques: DesignTechnique[] = [
     name: 'Tabla de decisión',
     idea: 'Cuando el resultado depende de varias condiciones a la vez, se tabulan todas las combinaciones (reglas) y la acción de cada una.',
     why: 'Las operaciones combinan condiciones (tipo × fondeo; origen × destino × monto × saldo). Alternativa descartada: probar entradas sueltas deja combinaciones de reglas sin cubrir.',
-    cases: 'CP-05, CP-06, CP-08, CP-11, CP-17',
+    cases: 'CP-05, CP-06, CP-08, CP-17',
     tables: [
       {
         title: 'Apertura de cuenta (RF-05/RF-06 / CP-05, CP-06)',
@@ -360,16 +334,6 @@ export const designTechniques: DesignTechnique[] = [
           ['R2', 'Sí', 'No', 'Sí', { t: 'Rechaza (CP-09)', tone: 'bad' }],
           ['R3', 'No', '—', '—', { t: 'Rechaza (CP-10)', tone: 'bad' }],
           ['R4', 'Sí', 'Sí', 'No', { t: 'Rechaza — misma cuenta (CP-10)', tone: 'bad' }],
-        ],
-      },
-      {
-        title: 'Bill Pay (RF-11 / CP-11)',
-        columns: ['Regla', 'datos completos', 'monto válido', 'saldo suficiente', 'Acción'],
-        rows: [
-          ['R1', 'Sí', 'Sí', 'Sí', { t: 'Paga y descuenta (CP-11)', tone: 'ok' }],
-          ['R2', 'No', '—', '—', { t: 'Rechaza (CP-12)', tone: 'bad' }],
-          ['R3', 'Sí', 'No', '—', { t: 'Rechaza (CP-12)', tone: 'bad' }],
-          ['R4', 'Sí', 'Sí', 'No', { t: 'Rechaza (CP-13)', tone: 'bad' }],
         ],
       },
     ],
