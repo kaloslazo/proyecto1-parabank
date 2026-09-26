@@ -1,5 +1,5 @@
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from 'react'
-import { clientBlackBoxExamples, clientFunctionalities, clientNonFunctionalRequirements, clientRequirements, designTechniques, Finding, initialCases, initialFindings, navItems, NavKey, Priority, requirements, TechniqueCell, TestCase, TestStatus } from './data'
+import { businessRules, clientBlackBoxExamples, clientFunctionalities, clientNonFunctionalRequirements, clientRequirements, designTechniques, Finding, initialCases, initialFindings, navItems, NavKey, Priority, requirements, TechniqueCell, TestCase, testRun, TestStatus } from './data'
 
 const priorityClass: Record<Priority, string> = { Alta: 'high', Media: 'medium', Baja: 'low' }
 const statusClass: Record<TestStatus, string> = { Pendiente: 'pending', 'Pasó': 'passed', 'Falló': 'failed', Bloqueado: 'blocked' }
@@ -142,6 +142,7 @@ function App() {
           {activeNav === 'cases' && <Cases cases={filteredCases} filter={caseFilter} setFilter={setCaseFilter} selectedCase={selectedCase} setSelectedCase={setSelectedCase} />}
           {activeNav === 'techniques' && <Techniques />}
           {activeNav === 'execution' && <Execution cases={highCases} updateStatus={updateStatus} toggleEvidence={toggleEvidence} />}
+          {activeNav === 'management' && <Management cases={highCases} findings={findings} />}
           {activeNav === 'findings' && <Findings findings={findings} showForm={showFindingForm} setShowForm={setShowFindingForm} onSubmit={addFinding} />}
         </div>
       </main>
@@ -212,12 +213,49 @@ function TechCellText({ cell }: { cell: TechniqueCell }) {
   return <span className={`tech-cell tone-${cell.tone}`}>{cell.t}</span>
 }
 
+function SessionStateDiagram() {
+  return <div className="state-diagram">
+    <span className="micro-label">Diagrama de estados — sesión (RF-04 / CP-04 · RF-23)</span>
+    <div className="state-diagram-scroll">
+      <svg viewBox="0 0 660 250" className="state-svg" role="img" aria-label="Diagrama de estados de la sesión: no autenticado y autenticado con sus transiciones">
+        <defs>
+          <marker id="stArrow" markerWidth="9" markerHeight="9" refX="7.5" refY="4" orient="auto"><path d="M0 0 L9 4 L0 8 z" fill="var(--ink)" /></marker>
+        </defs>
+        {/* estado inicial */}
+        <circle cx="34" cy="132" r="7" fill="var(--ink)" />
+        <path d="M41 132 H70" fill="none" stroke="var(--ink)" strokeWidth="2" markerEnd="url(#stArrow)" />
+        {/* nodos */}
+        <rect x="72" y="102" width="200" height="60" rx="14" fill="var(--surface-muted)" stroke="var(--line-strong)" strokeWidth="1.5" />
+        <text x="172" y="137" textAnchor="middle" className="state-node-label">No autenticado</text>
+        <rect x="404" y="102" width="200" height="60" rx="14" fill="var(--surface-muted)" stroke="var(--line-strong)" strokeWidth="1.5" />
+        <text x="504" y="137" textAnchor="middle" className="state-node-label">Autenticado</text>
+        {/* transición login válido (arriba) */}
+        <path d="M272 120 C 320 96, 356 96, 404 120" fill="none" stroke="var(--ink)" strokeWidth="2" markerEnd="url(#stArrow)" />
+        <text x="338" y="88" textAnchor="middle" className="state-edge-label">login válido · CP-04</text>
+        {/* transición logout (abajo) */}
+        <path d="M404 150 C 356 176, 320 176, 272 150" fill="none" stroke="var(--ink)" strokeWidth="2" markerEnd="url(#stArrow)" />
+        <text x="338" y="192" textAnchor="middle" className="state-edge-label">logout · RF-23</text>
+        {/* self-loop: login inválido */}
+        <path d="M140 102 C 120 66, 224 66, 204 102" fill="none" stroke="var(--muted)" strokeWidth="2" markerEnd="url(#stArrow)" />
+        <text x="172" y="52" textAnchor="middle" className="state-edge-label">login inválido · CP-03 (sigue no autenticado)</text>
+        {/* nota función protegida */}
+        <text x="172" y="200" textAnchor="middle" className="state-note">acceso a función protegida → pide login</text>
+      </svg>
+    </div>
+  </div>
+}
+
 function Techniques() {
   return <><PageIntro eyebrow="03 · Diseño" title="Técnicas de diseño de caja negra" description="La derivación detrás de cada caso: las clases, valores límite, reglas de decisión y estados que sustentan las pruebas. La técnica se elige por la naturaleza del requisito, no por gusto." action={<Badge tone="plum">{designTechniques.length} técnicas</Badge>} />
+    <section className="rules-section"><div className="rules-head"><div><span className="micro-label">Reglas de negocio verificadas</span><h2>Las reglas que rigen cada operación</h2><p>Cada regla resume la condición de negocio que las pruebas comprueban, con los requisitos funcionales relacionados.</p></div><Badge tone="mint">{businessRules.length} reglas</Badge></div>
+      <div className="rules-table-scroll"><table className="rules-table"><thead><tr><th>ID</th><th>Área</th><th>Regla de negocio</th><th>RF</th></tr></thead>
+      <tbody>{businessRules.map((rn) => <tr key={rn.id}><td className="rules-td-id">{rn.id}</td><td className="rules-td-area">{rn.area}</td><td>{rn.rule}</td><td className="rules-td-rf">{rn.relatedRf}</td></tr>)}</tbody></table></div>
+    </section>
     <div className="tech-legend"><span className="micro-label">Cómo leer las tablas</span><div className="tech-legend-keys"><span className="tech-cell tone-ok">válido / pasa</span><span className="tech-cell tone-bad">inválido / defecto</span><span className="tech-cell tone-muted">rechazo esperado</span></div></div>
     <div className="tech-stack">{designTechniques.map((tech) => <section className="tech-block" key={tech.id}>
       <div className="tech-block-head"><div className="tech-badge">{tech.id}</div><div><h2>{tech.name}</h2><p className="tech-idea">{tech.idea}</p></div></div>
       <div className="tech-why"><div className="tech-why-item"><span className="micro-label">Por qué esta y no otra</span><p>{tech.why}</p></div><div className="tech-why-item"><span className="micro-label">Casos donde se aplicó</span><p>{tech.cases}</p></div></div>
+      {tech.id === 'ST' && <SessionStateDiagram />}
       <div className="tech-tables">{tech.tables.map((table) => <div className="tech-table-wrap" key={table.title}>
         <h3 className="tech-table-title">{table.title}</h3>
         <div className="tech-table-scroll"><table className="tech-table"><thead><tr>{table.columns.map((col) => <th key={col}>{col}</th>)}</tr></thead>
@@ -229,6 +267,49 @@ function Techniques() {
 
 function Execution({ cases, updateStatus, toggleEvidence }: { cases: TestCase[]; updateStatus: (id: string, status: TestStatus) => void; toggleEvidence: (id: string) => void }) {
   return <><PageIntro eyebrow="04 · Ejecución" title="Ejecución crítica" description="Solo se ejecutan primero los casos de prioridad alta. Cada veredicto necesita evidencia del sistema real." action={<Badge tone="high">{cases.filter((item) => item.status !== 'Pendiente').length}/{cases.length} listos</Badge>} /><div className="execution-banner"><div className="banner-icon"><Icon name="play" size={21} /></div><div><strong>Antes / operación / después</strong><span>Registra saldo inicial, confirmación, saldo final e historial.</span></div><a className="text-button" href="https://parabank.parasoft.com/parabank/index.htm" target="_blank" rel="noreferrer">Ir a ParaBank <Icon name="external" size={15} /></a></div><div className="execution-list">{cases.map((item) => <div className="execution-card" key={item.id}><div className="execution-head"><div><span className="case-id">{item.id}</span><h3>{item.condition}</h3></div><Badge tone={statusClass[item.status]}>{item.status}</Badge></div><div className="execution-info"><div><span className="micro-label">Resultado esperado</span><p>{item.expected}</p></div>{item.obtained && <div><span className="micro-label">Resultado obtenido</span><p>{item.obtained}</p></div>}<div><span className="micro-label">Evidencia</span>{item.evidenceImage ? <a className="evidence-link" href={evidenceUrl(item.evidenceImage)} target="_blank" rel="noreferrer"><img className="evidence-thumb" src={evidenceUrl(item.evidenceImage)} alt={`Evidencia ${item.id}`} loading="lazy" /></a> : <p className={item.evidence ? 'evidence-ready' : 'evidence-pending'}>{item.evidence ? 'Captura registrada' : 'Pendiente de captura'}</p>}</div></div><div className="execution-actions"><button className="evidence-chip" onClick={() => toggleEvidence(item.id)}><Icon name={item.evidence ? 'check' : 'clock'} size={15} />{item.evidence ? 'Evidencia lista' : 'Marcar evidencia'}</button><label>Veredicto<select value={item.status} onChange={(event) => updateStatus(item.id, event.target.value as TestStatus)}><option>Pendiente</option><option>Pasó</option><option>Falló</option><option>Bloqueado</option></select></label></div></div>)}</div></>
+}
+
+function Management({ cases, findings }: { cases: TestCase[]; findings: Finding[] }) {
+  const total = cases.length
+  const passed = cases.filter((c) => c.status === 'Pasó').length
+  const failed = cases.filter((c) => c.status === 'Falló').length
+  const blocked = cases.filter((c) => c.status === 'Bloqueado').length
+  const executed = cases.filter((c) => c.status !== 'Pendiente').length
+  const passRate = total ? Math.round((passed / total) * 100) : 0
+  const runStatus: TestStatus = failed > 0 ? 'Falló' : blocked > 0 ? 'Bloqueado' : 'Pasó'
+  const features = Array.from(new Set(cases.map((c) => c.feature)))
+  const groups = features.map((feature) => ({ feature, items: cases.filter((c) => c.feature === feature) }))
+  const C = 2 * Math.PI * 52
+  return <><PageIntro eyebrow="Gestión de pruebas" title="Gestión de pruebas" description="Reporte de la corrida de casos de prioridad alta ejecutada sobre el sistema real: estado, avance y trazabilidad por funcionalidad." action={<Badge tone={statusClass[runStatus]}>{runStatus}</Badge>} />
+    <div className="mgmt-top">
+      <div className="mgmt-meta-card">
+        <span className="micro-label">{testRun.title}</span>
+        <dl className="mgmt-meta"><div><dt>Sistema</dt><dd>{testRun.system}</dd></div><div><dt>Equipo</dt><dd>{testRun.team}</dd></div><div><dt>Fecha</dt><dd>{testRun.date}</dd></div><div><dt>Usuario de prueba</dt><dd>{testRun.testUser}</dd></div><div><dt>Cuentas</dt><dd>{testRun.accounts}</dd></div></dl>
+      </div>
+      <div className="mgmt-rate-card">
+        <svg className="mgmt-donut" viewBox="0 0 128 128" role="img" aria-label={`${passRate}% de casos aprobados`}>
+          <circle cx="64" cy="64" r="52" fill="none" stroke="var(--surface-strong)" strokeWidth="12" />
+          <circle cx="64" cy="64" r="52" fill="none" stroke="var(--ink)" strokeWidth="12" strokeLinecap="round" strokeDasharray={`${(passRate / 100) * C} ${C}`} transform="rotate(-90 64 64)" />
+          <text x="64" y="60" textAnchor="middle" className="mgmt-donut-value">{passRate}%</text>
+          <text x="64" y="80" textAnchor="middle" className="mgmt-donut-label">aprobados</text>
+        </svg>
+        <div className="mgmt-stats">
+          <div><strong>{executed}/{total}</strong><span>ejecutados</span></div>
+          <div><strong>{passed}</strong><span>pasaron</span></div>
+          <div><strong>{failed}</strong><span>fallaron</span></div>
+          <div><strong>{findings.length}</strong><span>hallazgos</span></div>
+        </div>
+      </div>
+    </div>
+    <div className="mgmt-suites">{groups.map((g) => <section className="mgmt-suite" key={g.feature}>
+      <div className="mgmt-suite-head"><h3>{g.feature}</h3><span>{g.items.length} caso(s)</span></div>
+      <div className="mgmt-rows">{g.items.map((c) => <div className="mgmt-row" key={c.id}>
+        <span className="case-id">{c.id}</span>
+        <div className="mgmt-row-main"><strong>{c.condition}</strong><small>{c.requirement} · {c.technique}</small></div>
+        <Badge tone={statusClass[c.status]}>{c.status}</Badge>
+      </div>)}</div>
+    </section>)}</div>
+  </>
 }
 
 function Findings({ findings, showForm, setShowForm, onSubmit }: { findings: Finding[]; showForm: boolean; setShowForm: (value: boolean) => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {

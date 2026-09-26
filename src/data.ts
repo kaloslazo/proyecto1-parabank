@@ -1,6 +1,6 @@
 export type Priority = 'Alta' | 'Media' | 'Baja'
 export type TestStatus = 'Pendiente' | 'Pasó' | 'Falló' | 'Bloqueado'
-export type NavKey = 'overview' | 'plan' | 'traceability' | 'cases' | 'techniques' | 'execution' | 'findings'
+export type NavKey = 'overview' | 'plan' | 'traceability' | 'cases' | 'techniques' | 'execution' | 'management' | 'findings'
 
 export type Requirement = {
   id: string
@@ -231,7 +231,38 @@ export const navItems: { key: NavKey; label: string; icon: string }[] = [
   { key: 'cases', label: 'Casos', icon: 'check' },
   { key: 'techniques', label: 'Técnicas', icon: 'spark' },
   { key: 'execution', label: 'Ejecución', icon: 'play' },
+  { key: 'management', label: 'Gestión', icon: 'grid' },
   { key: 'findings', label: 'Hallazgos', icon: 'clipboard' },
+]
+
+// Metadatos de la corrida real ejecutada sobre ParaBank (24-09-2026).
+export const testRun = {
+  title: 'Ejecución CP Prioridad Alta — Proyecto 1',
+  system: 'ParaBank',
+  team: 'Gianpier Segovia · Kalos Lazo',
+  date: '24-09-2026',
+  testUser: 'gsegovia_qa_5821',
+  accounts: '28662 (Checking) · 28773 (Savings)',
+}
+
+// Reglas de negocio verificadas (lo que la profesora puede pedir).
+export type BusinessRule = {
+  id: string
+  area: string
+  rule: string
+  relatedRf: string
+}
+
+export const businessRules: BusinessRule[] = [
+  { id: 'RN-01', area: 'Registro', rule: 'El nombre de usuario debe ser único: no se permiten dos cuentas con el mismo usuario, y todos los campos obligatorios deben estar completos.', relatedRf: 'RF-01, RF-02' },
+  { id: 'RN-02', area: 'Acceso', rule: 'Solo se inicia sesión con credenciales válidas de un cliente registrado; cualquier credencial inválida se rechaza.', relatedRf: 'RF-03, RF-04' },
+  { id: 'RN-03', area: 'Apertura de cuenta', rule: 'Una cuenta se abre únicamente si se elige el tipo (Checking o Savings) y una cuenta de fondeo válida; se fondea con el saldo mínimo configurado, debitado del fondeo.', relatedRf: 'RF-05, RF-06, RF-25' },
+  { id: 'RN-04', area: 'Transferencia', rule: 'Se permite solo si el monto es mayor que cero, hay saldo suficiente en el origen y el origen es distinto del destino; debita el origen y acredita el destino por el mismo monto.', relatedRf: 'RF-08, RF-09, RF-10' },
+  { id: 'RN-05', area: 'Pago de servicios (Bill Pay)', rule: 'Se procesa solo con datos del beneficiario completos, cuenta válida (coincidente con su confirmación) y monto dentro del saldo; el monto se descuenta de la cuenta elegida.', relatedRf: 'RF-11, RF-12, RF-13, RF-29' },
+  { id: 'RN-06', area: 'Préstamo', rule: 'Se aprueba solo si el enganche cumple el umbral configurado; un préstamo aprobado crea la cuenta de préstamo y acredita los fondos.', relatedRf: 'RF-18, RF-19, RF-34' },
+  { id: 'RN-07', area: 'Trazabilidad', rule: 'Toda operación monetaria (transferencia, pago o préstamo) queda registrada y es consultable en el historial de la cuenta.', relatedRf: 'RF-14, RF-15, RF-27' },
+  { id: 'RN-08', area: 'Sesión', rule: 'La sesión inicia autenticada, se cierra con Log Out y las funciones protegidas exigen autenticación vigente.', relatedRf: 'RF-04, RF-23' },
+  { id: 'RN-09', area: 'Administración', rule: 'Los parámetros del banco (saldo inicial, saldo mínimo, umbral y proveedor/procesador de préstamos) se configuran desde el panel de administración.', relatedRf: 'RF-20, RF-21, RF-22, RF-36' },
 ]
 
 // Derivación de las técnicas de diseño de caja negra: las clases/valores

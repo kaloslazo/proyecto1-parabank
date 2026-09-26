@@ -58,6 +58,26 @@ process.stdout.write(JSON.stringify(exported.designTechniques));
     )
     return json.loads(result.stdout)
 
+
+def load_business_rules() -> list[dict]:
+    """Carga businessRules desde data.ts (fuente única con el dashboard)."""
+    node_program = r"""
+const fs = require('fs');
+const ts = require('typescript');
+const source = fs.readFileSync(process.argv[1], 'utf8');
+const js = ts.transpileModule(source, {
+  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 }
+}).outputText;
+const exported = {};
+new Function('exports', 'module', js)(exported, { exports: exported });
+process.stdout.write(JSON.stringify(exported.businessRules));
+"""
+    result = subprocess.run(
+        ["node", "-e", node_program, str(DATA_TS)],
+        cwd=ROOT, check=True, capture_output=True, text=True,
+    )
+    return json.loads(result.stdout)
+
 INK = colors.HexColor("#1D1D1F")
 INK_SOFT = colors.HexColor("#3A3A3C")
 MUTED = colors.HexColor("#6E6E73")
@@ -199,10 +219,22 @@ def tech_cell(cell) -> Paragraph:
 
 
 def build_annex(S: list) -> None:
-    techniques = load_techniques()
     usable = 167 * mm
+
+    # ---- Anexo A: reglas de negocio ----
+    rules = load_business_rules()
     S.append(PageBreak())
-    S.append(P("Anexo: derivación de las técnicas de diseño de caja negra", "H1"))
+    S.append(P("Anexo A: reglas de negocio verificadas", "H1"))
+    S.append(P("Cada regla resume la condición de negocio que las pruebas comprueban sobre el sistema real, con los requisitos funcionales relacionados.", "Body"))
+    rrows = [[P("ID", "TH"), P("Área", "TH"), P("Regla de negocio", "TH"), P("RF", "TH")]]
+    for rn in rules:
+        rrows.append([P(rn["id"], "TCS"), P(rn["area"], "TCS"), P(rn["rule"], "TC"), P(rn["relatedRf"], "TC")])
+    S.append(table(rrows, [16 * mm, 30 * mm, 99 * mm, 22 * mm]))
+
+    # ---- Anexo B: derivación de las técnicas ----
+    techniques = load_techniques()
+    S.append(PageBreak())
+    S.append(P("Anexo B: derivación de las técnicas de diseño de caja negra", "H1"))
     S.append(P("La técnica se elige por la naturaleza del requisito. Se muestran las clases, valores límite, reglas de decisión y estados concretos que sustentan los casos de prueba; las mismas tablas están disponibles en la vista Técnicas del panel web.", "Body"))
     for tech in techniques:
         S.append(P(f"{tech['id']} - {tech['name']}", "H2"))
